@@ -1,11 +1,9 @@
 # Expo
 .expo/web/cache
 # OSX
-#
 .DS_Store
 
 # Xcode
-#
 build/
 *.pbxuser
 !default.pbxuser
@@ -25,7 +23,6 @@ DerivedData
 ios/.xcode.env.local
 
 # Android/IntelliJ
-#
 build/
 .idea
 .gradle
@@ -37,7 +34,6 @@ local.properties
 !debug.keystore
 
 # node.js
-#
 node_modules/
 npm-debug.log
 yarn-error.log
