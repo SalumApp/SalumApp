@@ -1,0 +1,41 @@
+name: CI Stage 1 for linting, unit tests, and coverage report
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Linting
+        run: yarn lint
+
+      # - name: Unit & Integration tests
+      #   run: yarn test
+
+      # - name: Jest coverage report
+      #   uses: ArtiomTr/jest-coverage-report-action@v2
+      #   with:
+      #     coverage-file: ./jest-report.json
+      #     base-coverage-file: ./jest-report.json
+  build:
+    needs: lint-and-test
+    uses: ./.github/workflows/build.yml
+#    with:
+#      environment: release
+    secrets: inherit
