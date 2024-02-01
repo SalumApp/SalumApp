@@ -1,0 +1,16 @@
+{
+  "build": {
+    "preview": {
+      "android": {
+        "developmentClient": true,
+        "distribution": "internal",
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease"
+      },
+      "ios": {
+        "simulator": true
+      }
+    },
+    "production": {}
+  }
+}
