@@ -1,9 +1,8 @@
 name: CI Stage 1 for linting, unit tests, and coverage report
 
 on:
-  pull_request:
-    branches:
-      - develop
+  repository_dispatch:
+    types: [create-pull-request]
 
 jobs:
   lint-and-test:
