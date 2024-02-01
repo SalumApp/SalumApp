@@ -56,7 +56,7 @@ const NewHome = ({ route }) => {
 
         <SpendingCard />
         <NetWorthCard style={{ marginTop: 9 }} />
-        <SpendingCard />
+
       </ScrollView>
 
       <NavBar
