@@ -26,7 +26,7 @@ jobs:
         run: yarn lint
 
       - name: Unit & Integration tests
-        run: yarn test
+        run: yarn test -- --coverage --updateSnapshot
 
       - name: Jest coverage report
         uses: ArtiomTr/jest-coverage-report-action@v2

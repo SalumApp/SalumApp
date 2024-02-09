@@ -32,10 +32,7 @@ export default function App() {
           initialRouteName="Home"
           screenOptions={{ headerShown: false }}
         >
-          <Stack.Screen
-            name="Home"
-            component={NewHome}
-          />
+          <Stack.Screen name="Home" component={NewHome} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

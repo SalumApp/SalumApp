@@ -1,7 +1,13 @@
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import * as React from "react";
-import { StyleSheet, View, Text, ScrollView, useWindowDimensions } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  useWindowDimensions,
+} from "react-native";
 
 import { Border, Color, FontSize } from "../GlobalStyles";
 import NavBar from "../components/NavBar";
@@ -14,7 +20,10 @@ const NewHome = ({ route }) => {
       <LinearGradient
         style={[
           styles.newHomeChild,
-          { width: useWindowDimensions().width, height: useWindowDimensions().height * 1.5 },
+          {
+            width: useWindowDimensions().width,
+            height: useWindowDimensions().height * 1.5,
+          },
         ]}
         locations={[0, 0.99]}
         colors={["#fff6e5", "rgba(248, 237, 216, 0)"]}
