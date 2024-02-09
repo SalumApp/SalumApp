@@ -8,25 +8,19 @@ import {
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { StyleSheet, useWindowDimensions } from "react-native";
+import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import NewHome from "./src/pages/NewHome";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const screenSize = {
-    width: useWindowDimensions().width,
-    height: useWindowDimensions().height,
-  };
-
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
     Inter_500Medium,
     Inter_600SemiBold,
     Inter_700Bold,
   });
-
   if (!fontsLoaded) {
     return null;
   }
@@ -41,7 +35,6 @@ export default function App() {
           <Stack.Screen
             name="Home"
             component={NewHome}
-            initialParams={{ screenSize }}
           />
         </Stack.Navigator>
       </NavigationContainer>

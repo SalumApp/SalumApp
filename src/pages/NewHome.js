@@ -1,7 +1,7 @@
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import * as React from "react";
-import { StyleSheet, View, Text, ScrollView } from "react-native";
+import { StyleSheet, View, Text, ScrollView, useWindowDimensions } from "react-native";
 
 import { Border, Color, FontSize } from "../GlobalStyles";
 import NavBar from "../components/NavBar";
@@ -9,13 +9,12 @@ import NetWorthCard from "../components/NetWorthCard";
 import SpendingCard from "../components/SpendingCard";
 
 const NewHome = ({ route }) => {
-  const { screenSize } = route.params;
   return (
-    <View style={[styles.newHome, { height: screenSize.height }]}>
+    <View style={[styles.newHome, { height: useWindowDimensions().height }]}>
       <LinearGradient
         style={[
           styles.newHomeChild,
-          { width: screenSize.width, height: screenSize.height * 1.5 },
+          { width: useWindowDimensions().width, height: useWindowDimensions().height * 1.5 },
         ]}
         locations={[0, 0.99]}
         colors={["#fff6e5", "rgba(248, 237, 216, 0)"]}
@@ -67,7 +66,7 @@ const NewHome = ({ route }) => {
         add={require("../assets/add.png")}
         menuHomePosition="absolute"
         menuHomeLeft={0}
-        menuHomeWidth={screenSize.width}
+        menuHomeWidth={useWindowDimensions().width}
         menuHomeBottom="0%"
       />
     </View>
