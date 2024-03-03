@@ -1,6 +1,17 @@
 # Expo
 .expo/web/cache
 coverage/**/*
+node_modules/
+.expo/
+dist/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
 # OSX
 .DS_Store
 
@@ -24,7 +35,6 @@ DerivedData
 ios/.xcode.env.local
 
 # Android/IntelliJ
-build/
 .idea
 .gradle
 local.properties
@@ -35,7 +45,6 @@ local.properties
 !debug.keystore
 
 # node.js
-node_modules/
 npm-debug.log
 yarn-error.log
 
