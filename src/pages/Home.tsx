@@ -6,13 +6,16 @@ import {
   useWindowDimensions,
   StyleSheet,
   ScrollView,
-  SafeAreaView,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import CashflowCard from "../components/Card/CashflowCard";
+import NetWorthCard from "../components/Card/NetWorthCard";
 import { TopNav } from "../components/Navigation/TopNav";
 
 export const Home = () => {
+  const insets = useSafeAreaInsets();
+
   return (
     <View style={[styles.newHome, { height: useWindowDimensions().height }]}>
       <LinearGradient
@@ -26,24 +29,32 @@ export const Home = () => {
         locations={[0, 0.99]}
         colors={["#fff6e5", "rgba(248, 237, 216, 0)"]}
       />
-
-      <SafeAreaView className="absolute w-full">
+      <View
+        style={{
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+        }}
+        className="absolute w-full h-full"
+      >
         <TopNav
           title="Home"
           onLeftPress={() => console.log("Left")}
           onRightPress={() => console.log("Right")}
+          titleColor="#000000"
         />
-        <Text className="relative text-xl text-gray-500 text-center pt-3">
+        <Text className="relative text-xl text-gray-500 text-center pt-4">
           Left to spend in January
         </Text>
-        <Text className="relative text-6xl font-semibold text-red-500 text-center pt-3">
+        <Text className="relative text-6xl font-semibold text-emerald-500 text-center pt-4">
           $100,000.00
         </Text>
-        <ScrollView>
-          <CashflowCard spendingBalance={1234.56} />
-          <CashflowCard spendingBalance={1234.56} />
+        <ScrollView style={{ flex: 1 }}>
+          <CashflowCard spendingNumber={4550} incomeNumber={8000} />
+          <NetWorthCard netWorth={100000} />
         </ScrollView>
-      </SafeAreaView>
+      </View>
     </View>
   );
 };

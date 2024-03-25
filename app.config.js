@@ -4,7 +4,7 @@ module.exports = {
   version: "0.0.0",
   orientation: "portrait",
   icon: "./src/assets/icons/icon.png",
-  userInterfaceStyle: "light",
+  userInterfaceStyle: "automatic",
   splash: {
     image: "./src/assets/icons/splash.png",
     resizeMode: "contain",
@@ -13,6 +13,7 @@ module.exports = {
   assetBundlePatterns: ["**/*"],
   ios: {
     supportsTablet: true,
+    usesIcloudStorage: true,
     bundleIdentifier: "com.salumapp.salumapp",
   },
   android: {
@@ -25,7 +26,25 @@ module.exports = {
   web: {
     favicon: "./src/assets/icons/favicon.png",
   },
-  plugins: ["expo-font"],
+  plugins: [
+    [
+      "expo-font",
+      {
+        fonts: ["./src/assets/fonts/*.otf"],
+      },
+    ],
+    [
+      "expo-image-picker",
+      {
+        photosPermission: "Allow $(PRODUCT_NAME) to access your photos",
+        cameraPermission: "Allow $(PRODUCT_NAME) to open the camera",
+
+        "//": "Disables the microphone permission",
+        microphonePermission: false,
+      },
+    ],
+    ["expo-document-picker"],
+  ],
   extra: {
     storybookEnabled: process.env.STORYBOOK_ENABLED,
     eas: {

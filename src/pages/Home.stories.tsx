@@ -4,7 +4,7 @@ import React from "react";
 import { Home } from "./Home";
 
 const meta = {
-  title: "Page/Home",
+  title: "Page/HomeScreen",
   component: Home,
   args: {},
   decorators: [(Story) => <Story />],
