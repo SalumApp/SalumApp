@@ -24,17 +24,28 @@ export const SliderControl: React.FC<SliderControlProps> = ({
         onValueChange={setSliderValue}
         maximumValue={10000}
         minimumValue={0}
-        minimumTrackTintColor="#00c828"
+        minimumTrackTintColor="#0077ff"
         step={1}
         allowTouchTrack
-        trackStyle={{ height: 5, backgroundColor: "transparent" }}
-        thumbStyle={{ height: 20, width: 20, backgroundColor: "transparent" }}
+        trackStyle={{
+          height: 15,
+          backgroundColor: "transparent",
+          borderRadius: 9,
+        }}
+        thumbStyle={{
+          height: 33,
+          width: 40,
+          backgroundColor: "transparent",
+          alignItems: "center",
+        }}
         thumbProps={{
           children: (
-            <View className="bg-primary" style={styles.label}>
-              <Text
-                style={styles.labelText}
-              >{`${Math.round(sliderValue / 100)}%`}</Text>
+            <View className="bg-white" style={styles.label_out}>
+              <View className="bg-primary" style={styles.label_in}>
+                <Text
+                  style={styles.labelText}
+                >{`${Math.round(sliderValue / 100)}%`}</Text>
+              </View>
             </View>
           ),
         }}
@@ -50,8 +61,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "stretch",
   },
-  label: {
-    position: "absolute",
+  label_out: {
+    borderRadius: 16,
+    height: 32,
+    width: 43,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  label_in: {
     borderRadius: 12,
     height: 24,
     width: 32,
