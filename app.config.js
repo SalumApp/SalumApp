@@ -30,7 +30,8 @@ module.exports = {
     [
       "expo-font",
       {
-        fonts: ["./src/assets/fonts/Inter-Black.otf",
+        fonts: [
+          "./src/assets/fonts/Inter-Black.otf",
           "./src/assets/fonts/Inter-BlackItalic.otf",
           "./src/assets/fonts/Inter-Bold.otf",
           "./src/assets/fonts/Inter-BoldItalic.otf",
@@ -47,7 +48,8 @@ module.exports = {
           "./src/assets/fonts/Inter-SemiBold.otf",
           "./src/assets/fonts/Inter-SemiBoldItalic.otf",
           "./src/assets/fonts/Inter-Thin.otf",
-          "./src/assets/fonts/Inter-ThinItalic.otf"],
+          "./src/assets/fonts/Inter-ThinItalic.otf",
+        ],
       },
     ],
     [

@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-import GlyphProvider from "../../assets/GlyphProvider/GlyphProvider";
+import TransactionSvg from "../../assets/GlyphProvider/glyph/Finance/Glyph/transaction.svg";
 import { formatCurrency, formatTime } from "../../utils/Misc";
 
 interface TransactionCardProps {
@@ -38,11 +38,7 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
           className="rounded-3xl w-20 h-20 flex justify-center items-center"
           style={{ backgroundColor: iconBg }}
         >
-          <GlyphProvider.TransactionSvg
-            width={52}
-            height={52}
-            fill={iconFill}
-          />
+          <TransactionSvg width={52} height={52} fill={iconFill} />
         </View>
         <View className="pl-4 flex-col">
           <Text className="text-xl pt-1.5 font-medium">{transactionTitle}</Text>
