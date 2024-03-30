@@ -2,16 +2,14 @@ import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 import TransactionSvg from "../../assets/GlyphProvider/glyph/Finance/Glyph/transaction.svg";
-import { formatCurrency, formatTime } from "../../utils/Misc";
+import { addAlpha, formatCurrency, formatTime } from "../../utils/Misc";
 
 interface TransactionCardProps {
   transactionTitle: string;
   transactionAmount: number;
   transactionTime: number;
   categoryTitle: string;
-  categoryColorR: number;
-  categoryColorG: number;
-  categoryColorB: number;
+  categoryColor: string;
 }
 
 const TransactionCard: React.FC<TransactionCardProps> = ({
@@ -19,14 +17,12 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
   transactionAmount = -89.64,
   transactionTime = 1710614000,
   categoryTitle = "Grocery",
-  categoryColorR = 238,
-  categoryColorG = 165,
-  categoryColorB = 25,
+  categoryColor = "rgb(238, 165, 25)",
 }) => {
+
   const amountTextColor =
     transactionAmount >= 0 ? "text-s_green" : "text-s_red";
-  const iconFill = `rgb(${categoryColorR}, ${categoryColorG}, ${categoryColorB})`;
-  const iconBg = `rgba(${categoryColorR}, ${categoryColorG}, ${categoryColorB}, 0.2)`;
+  const iconBg = addAlpha(categoryColor, 0.2);
 
   const formattedAmount = formatCurrency(transactionAmount);
   const sign = transactionAmount >= 0 ? "+" : "";
@@ -38,7 +34,7 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
           className="rounded-3xl w-20 h-20 flex justify-center items-center"
           style={{ backgroundColor: iconBg }}
         >
-          <TransactionSvg width={52} height={52} fill={iconFill} />
+          <TransactionSvg width={52} height={52} fill={ categoryColor } />
         </View>
         <View className="pl-4 flex-col">
           <Text className="text-xl pt-1.5 font-medium">{transactionTitle}</Text>
