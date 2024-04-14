@@ -1,56 +1,25 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { LineChart } from "react-native-gifted-charts";
 
-import SalarySvg from "../../assets/GlyphProvider/glyph/Finance/Glyph/salary.svg";
+import { getIcon } from "../../utils/GlyphProvider";
+import {
+  addAlpha,
+  formatCurrency,
+  getCurrentMonth,
+  getRemainingDaysInMonth,
+} from "../../utils/Misc";
+import { ThemeColor } from "../../utils/Theme";
 
 interface NetWorthCardProps {
   netWorth: number;
 }
 
-const getCurrentMonth = () => {
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  const currentDate = new Date();
-  return monthNames[currentDate.getMonth()];
-};
-
-const getRemainingDaysInMonth = () => {
-  const currentDate = new Date();
-  const lastDayOfMonth = new Date(
-    currentDate.getFullYear(),
-    currentDate.getMonth() + 1,
-    0,
-  );
-
-  return lastDayOfMonth.getDate() - currentDate.getDate();
-};
-
-const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(value);
-};
-
 const NetWorthCard = ({ netWorth = 0 }: NetWorthCardProps) => {
-  const iconMainColor = "rgb(0 119 255)";
-  const iconLightColor = "bg-s_blue-20";
   const sign = netWorth >= 0 ? "+" : "";
   const day_or_days = getRemainingDaysInMonth() === 1 ? "Day" : "Days";
   const balanceColor = netWorth >= 0 ? "color-s_green-100" : "color-s_red-100";
+  const iconColor = ThemeColor.s_blue["100"];
 
   const lineData = [
     { value: 20 },
@@ -64,16 +33,19 @@ const NetWorthCard = ({ netWorth = 0 }: NetWorthCardProps) => {
   ];
 
   return (
-    <View className="m-5 mt-4t bg-white rounded-3xl">
+    <View className="m-5 mt-4t bg-white rounded-3xl dark:bg-s_dark-75">
       {/* Top card frame */}
       <TouchableOpacity className="flex-row pt-5 pl-6">
         <View
-          className={`${iconLightColor} rounded-3xl w-20 h-20 flex justify-center items-center`}
+          className="rounded-3xl w-20 h-20 flex justify-center items-center"
+          style={{ backgroundColor: addAlpha(iconColor, 0.2) }}
         >
-          <SalarySvg width={52} height={52} fill={iconMainColor} />
+          {getIcon("Salary", 52, 52, iconColor)}
         </View>
         <View className="pl-4 flex-col">
-          <Text className="text-2xl pt-1.5 font-medium">Net Worth</Text>
+          <Text className="text-2xl pt-1.5 font-medium dark:text-s_light-100">
+            Net Worth
+          </Text>
           <Text className="text-xl pt-3 color-s_light-20">
             {getCurrentMonth()}
           </Text>
@@ -97,7 +69,7 @@ const NetWorthCard = ({ netWorth = 0 }: NetWorthCardProps) => {
           disableScroll
           startFillColor="#0077FF"
           startOpacity={1}
-          endOpacity={0.3}
+          endOpacity={0}
           initialSpacing={0}
           data={lineData}
           curved

@@ -1,26 +1,46 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-import TransactionSvg from "../../assets/GlyphProvider/glyph/Finance/Glyph/transaction.svg";
+import { getIcon } from "../../utils/GlyphProvider";
+import {
+  addAlpha,
+  formatCurrency,
+  getCurrentMonth,
+  getRemainingDaysInMonth,
+} from "../../utils/Misc";
+import { ThemeColor } from "../../utils/Theme";
 import SpendingBar from "../Graph/SpendingBar";
 
 interface CashflowCardProps {
   spendingNumber: number;
   incomeNumber: number;
+  expenseAmount: number[];
+  expenseColor: string[];
+  expenseTitle: string[];
+  incomeAmount: number[];
+  incomeColor: string[];
+  incomeTitle: string[];
 }
 
 const CashflowCard: React.FC<CashflowCardProps> = ({
   spendingNumber = 0,
   incomeNumber = 0,
+  expenseAmount = [500, 500, 1000],
+  expenseColor = ["orange", "purple", "red"],
+  expenseTitle = ["Shopping", "Recurring", "Dining"],
+  incomeAmount = [1000, 1000],
+  incomeColor = ["green", "black"],
+  incomeTitle = ["Salary", "Passive"],
 }) => {
   const spendingBalance = incomeNumber - spendingNumber;
   const isPositiveBalance = spendingBalance >= 0;
 
-  const balanceColor = isPositiveBalance ? "text-emerald-500" : "text-red-500";
-  const iconColor = isPositiveBalance ? "#00A86B" : "#FD3C4A";
-  const balanceBackgroundColor = isPositiveBalance
-    ? "bg-emerald-100"
-    : "bg-red-100";
+  const balanceColor = isPositiveBalance
+    ? "text-s_green-100"
+    : "text-s_red-100";
+  const iconColor = isPositiveBalance
+    ? ThemeColor.s_green["100"]
+    : ThemeColor.s_red["100"];
 
   const formattedBalance = formatCurrency(spendingBalance);
   const remainingDays = getRemainingDaysInMonth();
@@ -28,16 +48,18 @@ const CashflowCard: React.FC<CashflowCardProps> = ({
   const sign = isPositiveBalance ? "+" : "";
 
   return (
-    <TouchableOpacity className="m-5 mt-4 pl-6 bg-white rounded-3xl">
-      {/* Top card frame */}
+    <TouchableOpacity className="m-5 mt-4 pl-6 bg-white rounded-3xl dark:bg-s_dark-75">
       <View className="flex-row pt-5">
         <View
-          className={`${balanceBackgroundColor} rounded-3xl w-20 h-20 flex justify-center items-center`}
+          className="rounded-3xl w-20 h-20 flex justify-center items-center"
+          style={{ backgroundColor: addAlpha(iconColor, 0.2) }}
         >
-          <TransactionSvg width={52} height={52} fill={iconColor} />
+          {getIcon("Transaction", 52, 52, iconColor)}
         </View>
         <View className="pl-4 flex-col">
-          <Text className="text-2xl pt-1.5 font-medium">Cashflow</Text>
+          <Text className="text-2xl pt-1.5 font-medium dark:text-s_light-100">
+            Cashflow
+          </Text>
           <Text className="text-xl pt-3 color-gray-500">
             {getCurrentMonth()}
           </Text>
@@ -56,7 +78,7 @@ const CashflowCard: React.FC<CashflowCardProps> = ({
       {/* Middle card frame */}
       <View className="flex-row pb-2.5 mr-3">
         <View
-          className="h-full bg-black ml-4 my-4"
+          className="h-full bg-black dark:bg-s_light-40 ml-4 my-4"
           style={{ width: 1.69, height: 125 }}
         />
         <View className="flex-col mt-1">
@@ -64,62 +86,26 @@ const CashflowCard: React.FC<CashflowCardProps> = ({
             <SpendingBar
               titleString="Expenses"
               moneyColor="text-red-500"
-              categoriesSpendingAmount={[500, 500, 1000]}
-              colorsSpendingCategory={["orange", "purple", "red"]}
+              categoriesSpendingAmount={expenseAmount}
+              colorsSpendingCategory={expenseColor}
               totalBarWidth={250}
-              categoriesNames={["Shopping", "Recurring", "Dining"]}
+              categoriesNames={expenseTitle}
             />
           </View>
           <View className="pt-1.5">
             <SpendingBar
               titleString="Income"
               moneyColor="text-emerald-500"
-              categoriesSpendingAmount={[1000, 1000]}
-              colorsSpendingCategory={["green", "black"]}
+              categoriesSpendingAmount={incomeAmount}
+              colorsSpendingCategory={incomeColor}
               totalBarWidth={300}
-              categoriesNames={["Salary", "Passive"]}
+              categoriesNames={incomeTitle}
             />
           </View>
         </View>
       </View>
     </TouchableOpacity>
   );
-};
-
-const getCurrentMonth = () => {
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  const currentDate = new Date();
-  return monthNames[currentDate.getMonth()];
-};
-
-const getRemainingDaysInMonth = () => {
-  const currentDate = new Date();
-  const lastDayOfMonth = new Date(
-    currentDate.getFullYear(),
-    currentDate.getMonth() + 1,
-    0,
-  );
-  return lastDayOfMonth.getDate() - currentDate.getDate();
-};
-
-const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(value);
 };
 
 export default CashflowCard;

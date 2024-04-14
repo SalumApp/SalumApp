@@ -1,16 +1,19 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
 import React, { useState } from "react";
 import {
+  Modal,
   ScrollView,
   Text,
   TouchableOpacity,
-  View,
-  Modal,
   TouchableWithoutFeedback,
+  View,
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import Realm from "realm";
 
 import SuccessSVG from "../../assets/GlyphProvider/glyph/User Interface/Glyph/success.svg";
+import { Account } from "../../models/Account";
+import { Category } from "../../models/Category";
 import { MyButton } from "../Button/Button";
 import { Toggle } from "../ControlElements/Toggle";
 import AttachFileField from "../InputElements/AttachFileField";
@@ -19,85 +22,93 @@ import PlainTextField from "../InputElements/PlainTextField";
 
 interface TransactionFormProps {
   onConfirmation: () => void;
+  onCategoryChange: (categoryObj: Category) => void;
+  onAccountChange: (accountObj: Account) => void;
+  onDateChange: (value: number) => void;
+  onDescriptionChange: (value: string) => void;
+  onTitleChange: (value: string) => void;
+  onAttachChange: (data: string) => void;
+  categories: Realm.Results<Category>;
+  accounts: Realm.Results<Account>;
+  isRecurring: boolean;
+  toggleRecurring: () => void;
+  onFrequencyChange: (value: string) => void;
+  onEndDateChange: (value: number) => void;
 }
 
 const TransactionForm: React.FC<TransactionFormProps> = ({
   onConfirmation,
+  onCategoryChange,
+  onAccountChange,
+  onDateChange,
+  onDescriptionChange,
+  onTitleChange,
+  onAttachChange,
+  categories,
+  accounts,
+  isRecurring,
+  toggleRecurring,
+  onFrequencyChange,
+  onEndDateChange,
 }) => {
-  const [isEnabled, setIsEnabled] = useState(false);
+  const accountOptions = accounts.map((i) => i.title);
+  const categoryOptions = categories.map((i) => i.title);
   const [transactionDate, setTransactionDate] = useState(new Date());
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isDateTimePickerVisible, setDateTimePickerVisibility] =
     useState(false);
-
-  const [, setSelectedCategory] = useState(null);
-  const [, setSelectedAccount] = useState(null);
   const [selectedFreq, setSelectedFreq] = useState("Frequency");
   const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  const handleFreqChange = (value: string) => {
+  const handleFrequencyChange = (value: string) => {
     setSelectedFreq(value);
+    onFrequencyChange(value);
   };
-
   const handleEndDateChange = (event: any, date?: Date | undefined) => {
     setShowDatePicker(false);
     if (date) {
-      setSelectedEndDate(date);
+      setSelectedEndDate(new Date(date.getTime()));
+      onEndDateChange(date.getTime());
     }
   };
 
-  const toggleDatePicker = () => {
-    setShowDatePicker(!showDatePicker);
-  };
-
-  const handleCategoryChange = (option: string) => {
-    setSelectedCategory(option);
-  };
-
-  const handleAccountChange = (option: string) => {
-    setSelectedAccount(option);
-  };
-
-  const showDateTimePicker = () => {
-    setDateTimePickerVisibility(true);
-  };
-
-  const hideDateTimePicker = () => {
+  const handleDateTimeConfirm = (date: Date) => {
+    setTransactionDate(new Date(date.getTime()));
+    onDateChange(date.getTime());
     setDateTimePickerVisibility(false);
   };
 
-  const handleDateTimeConfirm = (date: Date) => {
-    setTransactionDate(date);
-    hideDateTimePicker();
-  };
-
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-  const contPress = () => {
-    setShowConfirmation(true);
-  };
   const handleConfirmationClick = () => {
     setShowConfirmation(false);
-    // TODO: Save the data and then move to the homepage
-    // For now, just navigate to the homepage
-    // Example: navigation.navigate('Home');
     onConfirmation();
   };
 
   return (
     <>
-      <ScrollView className="mt-4 w-full bg-white h-full rounded-t-3xl flex-1">
-        <View className="ml-2 mr-2 mt-8 pt-2">
+      <ScrollView
+        className="mt-4 w-full bg-white h-full rounded-t-3xl flex-1 mb-6"
+        automaticallyAdjustKeyboardInsets
+      >
+        <View className="ml-2 mr-2 mt-6">
+          <PlainTextField
+            customPlaceholder="Title"
+            onTextChange={onTitleChange}
+          />
+        </View>
+        <View className="ml-2 mr-2 pt-2">
           <DropdownMenuField
-            options={["Shopping", "Recurring", "Dining"]}
+            options={categoryOptions}
             placeholder="Category"
-            onValueChange={handleCategoryChange}
+            onValueChange={(value: string) =>
+              onCategoryChange(categories[categoryOptions.indexOf(value)])
+            }
           />
         </View>
         <View className="ml-2 mr-2 mt-6">
           <TouchableOpacity
             className="justify-center items-center mx-4 h-20 bg-white border border-gray-300 rounded-3xl px-4"
-            onPress={showDateTimePicker}
+            onPress={() => setDateTimePickerVisibility(true)}
           >
             <Text className="text-2xl">{transactionDate.toLocaleString()}</Text>
           </TouchableOpacity>
@@ -106,50 +117,55 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
             mode="datetime"
             display="compact"
             onConfirm={handleDateTimeConfirm}
-            onCancel={hideDateTimePicker}
+            onCancel={() => setDateTimePickerVisibility(false)}
           />
         </View>
+
         <View className="ml-2 mr-2 mt-2">
-          <PlainTextField customPlaceholder="Description" />
+          <PlainTextField
+            customPlaceholder="Description"
+            onTextChange={onDescriptionChange}
+          />
         </View>
         <View className="ml-2 mr-2 mt-2">
           <DropdownMenuField
-            options={[
-              "Chase Checking",
-              "Chase Credit",
-              "Bank of America Checking",
-            ]}
+            options={accountOptions}
             placeholder="Account"
-            onValueChange={handleAccountChange}
+            onValueChange={(value: string) =>
+              onAccountChange(accounts[accountOptions.indexOf(value)])
+            }
           />
         </View>
         <View className="mt-2">
-          <AttachFileField customPlaceholder="Add Attachment" />
+          <AttachFileField
+            customPlaceholder="Add Attachment"
+            onAttachChange={onAttachChange}
+          />
         </View>
         <View className="flex-row justify-between ml-2 mr-2 mt-8 mb-1">
           <Text
             className="ml-5 text-2xl mb-2"
-            style={{ color: isEnabled ? "#000000" : "#9CA3AF" }}
+            style={{ color: isRecurring ? "#000000" : "#9CA3AF" }}
           >
             Recurring
           </Text>
           <View className="mr-5">
-            <Toggle onToggle={toggleSwitch} isEnabled={isEnabled} />
+            <Toggle onToggle={toggleRecurring} isEnabled={isRecurring} />
           </View>
         </View>
-        {isEnabled && (
+        {isRecurring && (
           <View className="ml-2 mr-2 mt-4">
             <View className="mb-2">
               <DropdownMenuField
                 options={["Yearly", "Monthly", "Weekly", "Daily"]}
                 placeholder={selectedFreq}
-                onValueChange={handleFreqChange}
+                onValueChange={handleFrequencyChange}
               />
             </View>
 
             <View className="mb-2">
               <TouchableOpacity
-                onPress={toggleDatePicker}
+                onPress={() => setShowDatePicker(!showDatePicker)}
                 className="flex-row justify-between border border-gray-300 bg-white rounded-3xl h-20 ml-4 mr-4 mt-5"
               >
                 <View>
@@ -172,8 +188,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
             </View>
           </View>
         )}
-        <View className="mb-8 flex-auto">
-          <MyButton onPress={contPress} text="Continue" />
+        <View className="mb-8 flex-auto pb-8">
+          <MyButton onPress={() => setShowConfirmation(true)} text="Continue" />
         </View>
       </ScrollView>
       {showConfirmation && (
