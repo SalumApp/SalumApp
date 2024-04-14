@@ -1,12 +1,20 @@
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { Image, Platform, Text, TouchableOpacity, View } from "react-native";
 
 import Attachment from "../../assets/GlyphProvider/glyph/User Interface/Glyph/attachment.svg";
 import BottomSheetAttach from "../Sheet/BottomSheetAttach";
 
-const AttachFileField = ({ customPlaceholder = "Input..." }) => {
+interface AttachFileFieldProp {
+  customPlaceholder: string;
+  onAttachChange: (data: string) => void;
+}
+
+const AttachFileField = ({
+  customPlaceholder = "Input...",
+  onAttachChange,
+}: AttachFileFieldProp) => {
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const [image, setImage] = useState(null);
 
@@ -22,13 +30,16 @@ const AttachFileField = ({ customPlaceholder = "Input..." }) => {
     } else {
       const result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
         quality: 1,
+        exif: false,
+        base64: true,
       });
-
-      // console.log(result);
 
       if (!result.canceled) {
         setImage(result.assets[0].uri);
+        onAttachChange(result.assets[0].base64);
       }
     }
   };
@@ -37,24 +48,42 @@ const AttachFileField = ({ customPlaceholder = "Input..." }) => {
     setIsBottomSheetVisible(false);
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsMultipleSelection: false,
+      allowsEditing: true,
+      aspect: [4, 3],
       quality: 1,
       exif: false,
-      orderedSelection: true,
+      base64: true,
     });
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      onAttachChange(result.assets[0].base64);
     }
   };
 
   const pickDoc = async () => {
-    setIsBottomSheetVisible(false);
-    const result = await DocumentPicker.getDocumentAsync();
+    const result = await DocumentPicker.getDocumentAsync({
+      type: "application/pdf",
+      copyToCacheDirectory: true,
+    });
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      const response = await fetch(result.assets[0].uri);
+      const blob = await response.blob();
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64data = reader.result as string;
+        onAttachChange(base64data);
+      };
+      reader.readAsDataURL(blob);
     }
+  };
+
+  const onPressDoc = () => {
+    setIsBottomSheetVisible(false);
+    const timeout = Platform.OS === "ios" ? 1000 : 10;
+    setTimeout(() => pickDoc(), timeout);
   };
 
   return (
@@ -82,7 +111,7 @@ const AttachFileField = ({ customPlaceholder = "Input..." }) => {
         onClose={() => setIsBottomSheetVisible(false)}
         onPressCam={pickImageCam}
         onPressGallery={pickImageGallery}
-        onPressDoc={pickDoc}
+        onPressDoc={onPressDoc}
       />
     </View>
   );

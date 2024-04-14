@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+    <title>fridge</title>
+    <g id="fridge">
+        <path d="M8,14V27a3,3,0,0,0,3,3H21a3,3,0,0,0,3-3V14Zm6,5a1,1,0,0,1-2,0V17a1,1,0,0,1,2,0Z"/>
+        <path d="M21,2H11A3,3,0,0,0,8,5v7H24V5A3,3,0,0,0,21,2ZM14,9a1,1,0,0,1-2,0V7a1,1,0,0,1,2,0Z"/>
+    </g>
+</svg>

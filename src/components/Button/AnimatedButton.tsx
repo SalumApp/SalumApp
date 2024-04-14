@@ -3,8 +3,8 @@ import React from "react";
 import {
   Animated,
   StyleSheet,
-  View,
   TouchableWithoutFeedback,
+  View,
   ViewStyle,
 } from "react-native";
 
@@ -95,6 +95,9 @@ export const AnimatedButton = ({
     ],
   };
 
+  const switchTransfer = () => {
+    navigate("transfer");
+  };
   const switchExpense = () => {
     navigate("expense");
   };
@@ -104,7 +107,7 @@ export const AnimatedButton = ({
 
   return (
     <View style={styles.container}>
-      <TouchableWithoutFeedback>
+      <TouchableWithoutFeedback onPress={switchTransfer}>
         <Animated.View
           style={[styles.button, transferStyle, { backgroundColor: "#EEA519" }]}
         >

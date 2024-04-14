@@ -1,4 +1,4 @@
-import { View, TouchableOpacity } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 
 interface ToggleProps {
   onToggle: () => void;

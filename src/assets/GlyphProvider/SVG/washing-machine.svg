@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+    <title>washing-machine</title>
+    <g id="washing-machine">
+        <path d="M4,12V27a3,3,0,0,0,3,3H25a3,3,0,0,0,3-3V12ZM16,26a6,6,0,1,1,6-6A6,6,0,0,1,16,26Z"/>
+        <path d="M25,2H7A3,3,0,0,0,4,5v5H28V5A3,3,0,0,0,25,2ZM11,8H9A1,1,0,0,1,9,6h2a1,1,0,0,1,0,2ZM23,8H21a1,1,0,0,1,0-2h2a1,1,0,0,1,0,2Z"/>
+        <circle cx="16" cy="20" r="4"/>
+    </g>
+</svg>

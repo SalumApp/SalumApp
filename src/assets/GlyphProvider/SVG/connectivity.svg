@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+    <title>connectivity</title>
+    <g id="connectivity">
+        <path d="M28,15a4,4,0,1,0-5,3.86V20a1,1,0,0,1-1,1H17V11.86a4,4,0,1,0-2,0V24H10a1,1,0,0,1-1-1V21.86a4,4,0,1,0-2,0V23a3,3,0,0,0,3,3h5v1a1,1,0,0,0,2,0V23h5a3,3,0,0,0,3-3V18.86A4,4,0,0,0,28,15Z"/>
+    </g>
+</svg>

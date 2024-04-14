@@ -1,13 +1,22 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { useFocusEffect } from "@react-navigation/native";
 import React from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View, useColorScheme } from "react-native";
 import { CurvedBottomBarExpo } from "react-native-curved-bottom-bar";
 
-import { ExpenseStackNavigator, IncomeStackNavigator } from "./StackNavigators";
+import PiechartSVG from "./src/assets/GlyphProvider/glyph/Finance/Glyph/piechart.svg";
+import TransactionSVG from "./src/assets/GlyphProvider/glyph/Finance/Glyph/transaction.svg";
+import HomeSVG from "./src/assets/GlyphProvider/glyph/User Interface/Glyph/home.svg";
+import Settings2SVG from "./src/assets/GlyphProvider/glyph/User Interface/Glyph/settings-2.svg";
 import { AnimatedButton } from "./src/components/Button/AnimatedButton";
+import { BudgetScreen } from "./src/pages/BudgetScreen";
+import { DetailedTransaction } from "./src/pages/DetailedTransaction";
 import { Home } from "./src/pages/Home";
+import { NewBudgetScreen } from "./src/pages/NewBudgetScreen";
+import { NewTransaction } from "./src/pages/NewTransaction";
+import { NewTransfer } from "./src/pages/NewTransfer";
+import { SettingsScreen } from "./src/pages/SettingsScreen";
 import { TransactionScreen } from "./src/pages/TransactionScreen";
+// import { getIcon } from "./src/utils/GlyphProvider";
 
 interface BottomTabProps {
   tabRef: React.MutableRefObject<any>;
@@ -20,6 +29,7 @@ interface NavProps {
 }
 
 const BottomTabNavigator = ({ tabRef }: BottomTabProps) => {
+  const colorScheme = useColorScheme();
   const HomeScreen: React.FC = () => {
     useFocusEffect(
       React.useCallback(() => {
@@ -35,6 +45,62 @@ const BottomTabNavigator = ({ tabRef }: BottomTabProps) => {
     return <Home />;
   };
 
+  const Transaction: React.FC = () => {
+    useFocusEffect(
+      React.useCallback(() => {
+        // Function to be called when screen is focused
+        tabRef.current?.setVisible(true);
+        return () => {
+          // Optional cleanup if needed when screen loses focus
+        };
+      }, []),
+    );
+
+    return <TransactionScreen />;
+  };
+
+  const Budget: React.FC = () => {
+    useFocusEffect(
+      React.useCallback(() => {
+        // Function to be called when screen is focused
+        tabRef.current?.setVisible(true);
+        return () => {
+          // Optional cleanup if needed when screen loses focus
+        };
+      }, []),
+    );
+
+    return <BudgetScreen />;
+  };
+
+  const Settings: React.FC = () => {
+    useFocusEffect(
+      React.useCallback(() => {
+        // Function to be called when screen is focused
+        tabRef.current?.setVisible(true);
+        return () => {
+          // Optional cleanup if needed when screen loses focus
+        };
+      }, []),
+    );
+
+    return <SettingsScreen />;
+  };
+
+  const NewBudget: React.FC = () => {
+    useFocusEffect(
+      React.useCallback(() => {
+        // Function to be called when screen is focused
+        tabRef.current?.setVisible(false);
+        return () => {
+          // Optional cleanup if needed when screen loses focus
+        };
+      }, []),
+    );
+
+    return <NewBudgetScreen />;
+  };
+
   const ExpenseScreen: React.FC = () => {
     useFocusEffect(
       React.useCallback(() => {
@@ -46,7 +112,7 @@ const BottomTabNavigator = ({ tabRef }: BottomTabProps) => {
       }, []),
     );
 
-    return <ExpenseStackNavigator />;
+    return <NewTransaction transactionType="expense" />;
   };
 
   const IncomeScreen: React.FC = () => {
@@ -60,49 +126,72 @@ const BottomTabNavigator = ({ tabRef }: BottomTabProps) => {
       }, []),
     );
 
-    return <IncomeStackNavigator />;
+    return <NewTransaction transactionType="income" />;
+  };
+
+  const TransferScreen: React.FC = () => {
+    useFocusEffect(
+      React.useCallback(() => {
+        // Function to be called when screen is focused
+        tabRef.current?.setVisible(false);
+        return () => {
+          // Optional cleanup if needed when screen loses focus
+        };
+      }, []),
+    );
+
+    return <NewTransfer />;
+  };
+
+  const TransactionDetailScreen: React.FC = () => {
+    useFocusEffect(
+      React.useCallback(() => {
+        // Function to be called when screen is focused
+        tabRef.current?.setVisible(false);
+        return () => {
+          // Optional cleanup if needed when screen loses focus
+        };
+      }, []),
+    );
+
+    return <DetailedTransaction />;
   };
 
   const _renderIcon = (routeName: string, selectedTab: string) => {
-    let icon: any = "";
+    let IconComponent: any = null;
+    let iconStyle = {};
 
     switch (routeName) {
       case "home":
-        icon = "home";
+        IconComponent = HomeSVG;
         break;
-      case "title2":
-        icon = "repeat-outline";
+      case "transaction":
+        IconComponent = TransactionSVG;
+        iconStyle = { paddingRight: 40 }; // Add padding to the right
         break;
-      case "title3":
-        icon = "people-circle-outline";
+      case "budget":
+        IconComponent = PiechartSVG;
+        iconStyle = { paddingLeft: 40 }; // Add padding to the left
         break;
-      case "title4":
-        icon = "wallet";
+      case "settings":
+        IconComponent = Settings2SVG;
         break;
     }
 
     return (
-      <Ionicons
-        name={icon}
-        size={25}
-        color={routeName === selectedTab ? "black" : "gray"}
-      />
-    );
-  };
-  const renderTabBar = ({ routeName, selectedTab, navigate }: NavProps) => {
-    return (
-      <TouchableOpacity
-        onPress={() => navigate(routeName)}
-        style={styles.tabbarItem}
-      >
-        {_renderIcon(routeName, selectedTab)}
-      </TouchableOpacity>
+      <View style={iconStyle}>
+        <IconComponent
+          width={25}
+          height={25}
+          fill={routeName === selectedTab ? "#0077FF" : "#C6C6C6"}
+        />
+      </View>
     );
   };
 
   const renderCir = ({ routeName, selectedTab, navigate }: NavProps) => {
     return (
-      <View style={{ bottom: 20 }}>
+      <View style={{ bottom: 20, zIndex: 1 }}>
         <AnimatedButton
           routeName={routeName}
           selectedTab={selectedTab}
@@ -112,21 +201,28 @@ const BottomTabNavigator = ({ tabRef }: BottomTabProps) => {
     );
   };
 
-  // const Screen1 = () => {
-  //     tabBarRef.current?.setVisible(false);
-  //     return <Expense onLeftPress={() => {console.log("left")}}/>;
-  // };
+  const renderTabBar = ({ routeName, selectedTab, navigate }: NavProps) => {
+    return (
+      <TouchableOpacity
+        onPress={() => navigate(routeName)}
+        className="justify-center pb-3 flex-1 items-center"
+      >
+        {_renderIcon(routeName, selectedTab)}
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <CurvedBottomBarExpo.Navigator
       type="DOWN"
-      style={styles.bottomBar}
       height={68}
       circleWidth={50}
-      bgColor="white"
+      bgColor={colorScheme === "dark" ? "black" : "white"}
+      circlePosition="CENTER"
       initialRouteName="home"
       borderTopLeftRight
-      renderCircle={renderCir}
       tabBar={renderTabBar}
+      renderCircle={renderCir}
       screenOptions={{ headerShown: false }}
       ref={tabRef}
     >
@@ -136,9 +232,19 @@ const BottomTabNavigator = ({ tabRef }: BottomTabProps) => {
         component={() => <HomeScreen />}
       />
       <CurvedBottomBarExpo.Screen
-        name="title2"
-        component={() => <TransactionScreen />}
+        name="transaction"
+        component={() => <Transaction />}
         position="LEFT"
+      />
+      <CurvedBottomBarExpo.Screen
+        name="budget"
+        component={() => <Budget />}
+        position="RIGHT"
+      />
+      <CurvedBottomBarExpo.Screen
+        name="settings"
+        component={() => <Settings />}
+        position="RIGHT"
       />
       <CurvedBottomBarExpo.Screen
         name="expense"
@@ -151,27 +257,22 @@ const BottomTabNavigator = ({ tabRef }: BottomTabProps) => {
         component={() => <IncomeScreen />}
       />
       <CurvedBottomBarExpo.Screen
-        name="title3"
-        component={() => <HomeScreen />}
-        position="RIGHT"
+        name="transfer"
+        position="CIRCLE"
+        component={() => <TransferScreen />}
       />
       <CurvedBottomBarExpo.Screen
-        name="title4"
-        component={() => <HomeScreen />}
-        position="RIGHT"
+        name="new budget"
+        position="CIRCLE"
+        component={() => <NewBudget />}
+      />
+      <CurvedBottomBarExpo.Screen
+        name="transaction detail"
+        position="CIRCLE"
+        component={() => <TransactionDetailScreen />}
       />
     </CurvedBottomBarExpo.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  bottomBar: {},
-  tabbarItem: {
-    paddingBottom: 20,
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 export default BottomTabNavigator;

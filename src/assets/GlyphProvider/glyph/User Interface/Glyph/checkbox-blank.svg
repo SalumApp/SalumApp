@@ -1,1 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><title>checkbox-blank</title><g id="checkbox-blank"><path d="M23,28H9a5,5,0,0,1-5-5V9A5,5,0,0,1,9,4H23a5,5,0,0,1,5,5V23A5,5,0,0,1,23,28ZM9,6A3,3,0,0,0,6,9V23a3,3,0,0,0,3,3H23a3,3,0,0,0,3-3V9a3,3,0,0,0-3-3Z"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+    <title>checkbox-blank</title>
+    <g id="checkbox-blank">
+        <path d="M23,28H9a5,5,0,0,1-5-5V9A5,5,0,0,1,9,4H23a5,5,0,0,1,5,5V23A5,5,0,0,1,23,28ZM9,6A3,3,0,0,0,6,9V23a3,3,0,0,0,3,3H23a3,3,0,0,0,3-3V9a3,3,0,0,0-3-3Z"/>
+    </g>
+</svg>
