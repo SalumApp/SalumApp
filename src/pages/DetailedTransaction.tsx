@@ -16,7 +16,7 @@ export const DetailedTransaction = () => {
   const { transactionId } = route.params;
   const transaction = useObject(Transaction, transactionId);
 
-  let bg_color = "bg-s_yellow-100";
+  let bg_color: string;
   if (transaction.isExpense) {
     bg_color = "bg-s_red-100";
   } else {
