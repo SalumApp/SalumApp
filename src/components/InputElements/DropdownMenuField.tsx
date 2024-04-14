@@ -1,13 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 import BottomSheet from "../Sheet/BottomSheet"; // Import the BottomSheet component
 
 interface DropdownMenuFieldProps {
   options?: string[];
   placeholder?: string;
-  onValueChange?: (value: string) => void;
+  onValueChange: (value: string) => void;
 }
 
 const DropdownMenuField = ({
@@ -24,8 +24,8 @@ const DropdownMenuField = ({
 
   const handleSelect = (option: string) => {
     setSelectedOption(option);
-    setIsBottomSheetVisible(false);
     onValueChange(option);
+    setIsBottomSheetVisible(false);
   };
 
   return (
@@ -37,6 +37,8 @@ const DropdownMenuField = ({
         <Text
           className="text-2xl"
           style={{ color: selectedOption ? "#000000" : "#9CA3AF" }}
+          ellipsizeMode="tail"
+          numberOfLines={2}
         >
           {selectedOption || placeholder}
         </Text>

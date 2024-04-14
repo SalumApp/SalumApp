@@ -1,14 +1,27 @@
 import React, { useState } from "react";
-import { View, TextInput } from "react-native";
+import { TextInput, View } from "react-native";
 
-const PlainTextField = ({ customPlaceholder = "Input..." }) => {
+interface PlainTextFieldProp {
+  customPlaceholder: string;
+  onTextChange: (value: string) => void;
+}
+
+const PlainTextField = ({
+  customPlaceholder = "Input...",
+  onTextChange,
+}: PlainTextFieldProp) => {
   const [valueText, setValue] = useState("");
+
+  const handleFreqChange = (value: string) => {
+    setValue(value);
+    onTextChange(value);
+  };
 
   return (
     <View className="relative p-4">
       <TextInput
         className="h-20 bg-white border border-gray-300 rounded-3xl px-4 text-2xl"
-        onChangeText={setValue}
+        onChangeText={handleFreqChange}
         value={valueText}
         placeholder={customPlaceholder}
         placeholderTextColor={valueText === "" ? "#9CA3AF" : "#000000"}

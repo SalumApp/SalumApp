@@ -1,14 +1,13 @@
 import React from "react";
 import {
+  Animated,
+  Modal,
   ScrollView,
   Text,
   TouchableOpacity,
-  View,
-  Modal,
   TouchableWithoutFeedback,
-  Animated,
+  View,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface BottomSheetProps {
   visible: boolean;
@@ -23,8 +22,6 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
   options,
   onOptionSelect,
 }) => {
-  const insets = useSafeAreaInsets();
-
   return (
     <Modal visible={visible} transparent animationType="slide">
       <TouchableWithoutFeedback onPress={onClose}>
@@ -38,13 +35,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
             <View className="items-center py-2.5 pt-4">
               <View className="w-16 h-1.5 bg-s_light-20 rounded-3xl mt-1" />
             </View>
-            <ScrollView
-              style={{
-                paddingBottom: insets.bottom,
-                paddingLeft: insets.left,
-                paddingRight: insets.right,
-              }}
-            >
+            <ScrollView>
               {options.map((option) => (
                 <TouchableOpacity
                   key={option}

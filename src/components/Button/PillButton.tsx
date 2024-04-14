@@ -17,7 +17,7 @@ export const PillButton = ({ onPress, text, glyph }: PillButtonProps) => {
 
   return (
     <TouchableOpacity
-      className="flex items-center justify-center self-center px-4 py-4 border border-s_light-60 rounded-full"
+      className="flex items-center justify-center self-center px-4 py-4 border border-s_light-40 rounded-full"
       onPress={onPress}
     >
       <View className="flex flex-row items-center justify-center">

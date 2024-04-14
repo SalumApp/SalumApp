@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, TouchableOpacity } from "react-native";
+import { TextInput, TouchableOpacity, View } from "react-native";
 
 import HideSvg from "../../assets/GlyphProvider/glyph/User Interface/Glyph/hide.svg"; // Direct SVG import
 import ShowSvg from "../../assets/GlyphProvider/glyph/User Interface/Glyph/show.svg"; // Direct SVG import

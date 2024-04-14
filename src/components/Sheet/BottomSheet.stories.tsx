@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React, { useState } from "react";
-import { View, Button } from "react-native";
+import { Button, View } from "react-native";
 
 import BottomSheet from "./BottomSheet";
 
