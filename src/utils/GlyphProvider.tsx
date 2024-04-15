@@ -44,8 +44,10 @@ import Glyph_Presentation3 from "../assets/Glyph/presentation-3.svg";
 import Glyph_Recurring_bill from "../assets/Glyph/recurring-bill.svg";
 import Glyph_Restaurant from "../assets/Glyph/restaurant.svg";
 import Glyph_Salary from "../assets/Glyph/salary.svg";
+import Glyph_Settings from "../assets/Glyph/settings.svg";
 import Glyph_Shirt from "../assets/Glyph/shirt.svg";
 import Glyph_Shopping_bag from "../assets/Glyph/shopping-bag.svg";
+import Glyph_Success from "../assets/Glyph/success.svg";
 import Glyph_Tea from "../assets/Glyph/tea.svg";
 import Glyph_Train from "../assets/Glyph/train.svg";
 import Glyph_Transaction from "../assets/Glyph/transaction.svg";
@@ -228,6 +230,14 @@ export const getIcon = (
     case "Weightlifiting":
       IconComponent = Glyph_Weightlifiting;
       break;
+    case "Settings":
+      IconComponent = Glyph_Settings;
+      break;
+    case "Success":
+      IconComponent = Glyph_Success;
+      break;
+    default:
+      IconComponent = Glyph_More;
   }
 
   return <IconComponent width={width} height={height} fill={fill} />;

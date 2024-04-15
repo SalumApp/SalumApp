@@ -1,4 +1,8 @@
 export const ThemeColor = {
+  s_dark_navy: {
+    100: "rgb(0, 11, 21)",
+    75: "rgb(1, 17, 32)",
+  },
   s_dark: {
     100: "rgb(0, 0, 0)",
     75: "rgb(22, 23, 25)",

@@ -30,6 +30,11 @@ module.exports = {
       colors: {
         primary: "rgb(var(--color-primary) / <alpha-value>)",
         secondary: "rgb(var(--color-secondary) / <alpha-value>)",
+        s_dark_navy: {
+          DEFAULT: "rgba(var(--color-s_dark_navy), <alpha-value>)",
+          100: "rgb(0, 11, 21)",
+          75: "rgb(1, 17, 32)",
+        },
         s_dark: {
           DEFAULT: "rgba(var(--color-s_dark), <alpha-value>)",
           100: "rgb(0, 0, 0)",

@@ -25,17 +25,17 @@ const BudgetCard: React.FC<BudgetCardProps> = ({
   }
 
   return (
-    <TouchableOpacity className="m-4 mt-3 mb-0 pl-5 rounded-3xl bg-s_light-80 border border-s_light-40">
+    <TouchableOpacity className="m-4 mt-3 mb-0 pl-5 rounded-3xl bg-s_light-80 border border-s_light-40 dark:bg-s_dark-75">
       <View className="flex-col pt-3 pb-3 justify-between">
         <View className="flex-row items-center justify-between">
-          <View className="flex-row items-center max-w-[60%] bg-s_light-80 border border-gray-300 rounded-3xl">
+          <View className="flex-row items-center max-w-[60%] bg-s_light-80 dark:bg-s_dark-75 border border-gray-300 rounded-3xl">
             <View
               className="h-5 w-5 rounded-full items-center self-center ml-3 mr-2 my-3"
               style={{ backgroundColor: categoryColor }}
             />
             <View className="max-w-[85%]">
               <Text
-                className="items-center self-center text-xl font-medium mr-4"
+                className="items-center self-center text-xl font-medium mr-4 dark:text-s_light-80"
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
@@ -50,8 +50,8 @@ const BudgetCard: React.FC<BudgetCardProps> = ({
           )}
         </View>
         <View className="mt-2">
-          <Text className="text-3xl font-medium">
-            Remaining {formatCurrency(remainingAmount, currency)}
+          <Text className="text-3xl font-medium dark:text-s_light-80">
+            {formatCurrency(remainingAmount, currency)} Remaining
           </Text>
         </View>
         <View className="mt-2">

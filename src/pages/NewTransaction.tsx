@@ -145,11 +145,12 @@ export const NewTransaction = ({ transactionType }: NewTransactionProps) => {
     }
     realm.write(() => {
       realm.create(Transaction, transactionToInsert);
-      selectedAccount.balance! +=
+      selectedAccount.balance +=
         amountInCents * (transactionType === "income" ? 1 : -1);
     });
     setKey((prevKey) => prevKey + 1);
     setAmountInCents(0);
+    setIsRecurring(false);
     navigation.navigate("transaction");
   };
 

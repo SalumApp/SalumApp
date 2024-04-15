@@ -52,19 +52,14 @@ const TransactionSegment: React.FC<TransactionSegmentProps> = ({
   const navigation = useNavigation<NavigationProp<any>>();
   return (
     <View className="mt-4">
-      <Text className="pl-8 text-3xl font-semibold">{segmentTitle}</Text>
+      <Text className="pl-8 text-3xl font-semibold dark:text-s_light-80">
+        {segmentTitle}
+      </Text>
       {transactionList.map((transaction) => {
         return (
           <TransactionCard
             key={transaction._id.toString()}
-            transactionTitle={transaction.title}
-            transactionAmount={
-              (transaction.amount / 100) * (transaction.isExpense ? -1 : 1)
-            }
-            transactionTime={transaction.datetime}
-            categoryTitle={transaction.category.title}
-            categoryGlyph={transaction.category.glyph}
-            categoryColor={transaction.category.color}
+            transaction={transaction}
             onPress={() =>
               navigation.navigate("transaction detail", {
                 transactionId: transaction._id,
@@ -217,8 +212,8 @@ export const TransactionScreen = () => {
 
         {transactions.length === 0 && (
           <View className="flex-1 items-center justify-center h-full">
-            <Text className="flex-col text-2xl self-center align-middle">
-              No Data
+            <Text className="flex-col text-2xl dark:text-s_light-80 self-center align-middle">
+              No Transactions Found
             </Text>
           </View>
         )}

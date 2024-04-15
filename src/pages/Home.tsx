@@ -1,9 +1,11 @@
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useQuery } from "@realm/react";
 import { LinearGradient } from "expo-linear-gradient";
 import * as React from "react";
 import {
   ScrollView,
   Text,
+  TouchableOpacity,
   useColorScheme,
   useWindowDimensions,
   View,
@@ -15,10 +17,12 @@ import NetWorthCard from "../components/Card/NetWorthCard";
 import { TopNav } from "../components/Navigation/TopNav";
 import { Category } from "../models/Category";
 import { Transaction } from "../models/Transaction";
+import { getIcon } from "../utils/GlyphProvider";
 import { formatCurrency } from "../utils/Misc";
 import { SafeAreaInsetsView } from "../utils/SafeArea";
 
 export const Home = () => {
+  const navigation = useNavigation<NavigationProp<any>>();
   const categories = useQuery(Category, (collection) => {
     return collection.filtered("title != $0", "Uncategorized");
   });
@@ -99,7 +103,27 @@ export const Home = () => {
       <SafeAreaInsetsView className="absolute w-full h-full">
         <TopNav
           title="Home"
-          onLeftPress={() => console.log(amountByExpenseCategory)}
+          left={
+            <TouchableOpacity
+              onPress={() => console.log("clicked")}
+              className="pl-5"
+            >
+              {getIcon("Success", 32, 32, "green")}
+            </TouchableOpacity>
+          }
+          right={
+            <TouchableOpacity
+              onPress={() => navigation.navigate("settings")}
+              className="pr-5"
+            >
+              {getIcon(
+                "Settings",
+                32,
+                32,
+                colorScheme === "dark" ? "#FFFFFF" : "#000000",
+              )}
+            </TouchableOpacity>
+          }
           onRightPress={() => console.log(expenseCategories)}
           titleColor={colorScheme === "dark" ? "#FFFFFF" : "#000000"}
         />

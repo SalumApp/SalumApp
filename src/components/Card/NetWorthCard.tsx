@@ -33,7 +33,7 @@ const NetWorthCard = ({ netWorth = 0 }: NetWorthCardProps) => {
   ];
 
   return (
-    <View className="m-5 mt-4t bg-white rounded-3xl dark:bg-s_dark-75">
+    <View className="m-5 mt-4t bg-white rounded-3xl dark:bg-s_dark_navy-75">
       {/* Top card frame */}
       <TouchableOpacity className="flex-row pt-5 pl-6">
         <View

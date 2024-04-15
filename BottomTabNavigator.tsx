@@ -9,6 +9,7 @@ import HomeSVG from "./src/assets/GlyphProvider/glyph/User Interface/Glyph/home.
 import Settings2SVG from "./src/assets/GlyphProvider/glyph/User Interface/Glyph/settings-2.svg";
 import { AnimatedButton } from "./src/components/Button/AnimatedButton";
 import { BudgetScreen } from "./src/pages/BudgetScreen";
+import CategoryScreen from "./src/pages/CategoryScreen";
 import { DetailedTransaction } from "./src/pages/DetailedTransaction";
 import { Home } from "./src/pages/Home";
 import { NewBudgetScreen } from "./src/pages/NewBudgetScreen";
@@ -16,6 +17,7 @@ import { NewTransaction } from "./src/pages/NewTransaction";
 import { NewTransfer } from "./src/pages/NewTransfer";
 import { SettingsScreen } from "./src/pages/SettingsScreen";
 import { TransactionScreen } from "./src/pages/TransactionScreen";
+import { ThemeColor } from "./src/utils/Theme";
 // import { getIcon } from "./src/utils/GlyphProvider";
 
 interface BottomTabProps {
@@ -157,6 +159,20 @@ const BottomTabNavigator = ({ tabRef }: BottomTabProps) => {
     return <DetailedTransaction />;
   };
 
+  const ManageCategoryScreen: React.FC = () => {
+    useFocusEffect(
+      React.useCallback(() => {
+        // Function to be called when screen is focused
+        tabRef.current?.setVisible(false);
+        return () => {
+          // Optional cleanup if needed when screen loses focus
+        };
+      }, []),
+    );
+
+    return <CategoryScreen />;
+  };
+
   const _renderIcon = (routeName: string, selectedTab: string) => {
     let IconComponent: any = null;
     let iconStyle = {};
@@ -217,7 +233,7 @@ const BottomTabNavigator = ({ tabRef }: BottomTabProps) => {
       type="DOWN"
       height={68}
       circleWidth={50}
-      bgColor={colorScheme === "dark" ? "black" : "white"}
+      bgColor={colorScheme === "dark" ? ThemeColor.s_dark["75"] : "white"}
       circlePosition="CENTER"
       initialRouteName="home"
       borderTopLeftRight
@@ -270,6 +286,11 @@ const BottomTabNavigator = ({ tabRef }: BottomTabProps) => {
         name="transaction detail"
         position="CIRCLE"
         component={() => <TransactionDetailScreen />}
+      />
+      <CurvedBottomBarExpo.Screen
+        name="manage category"
+        position="CIRCLE"
+        component={() => <ManageCategoryScreen />}
       />
     </CurvedBottomBarExpo.Navigator>
   );

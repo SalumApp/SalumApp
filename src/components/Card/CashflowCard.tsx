@@ -48,7 +48,7 @@ const CashflowCard: React.FC<CashflowCardProps> = ({
   const sign = isPositiveBalance ? "+" : "";
 
   return (
-    <TouchableOpacity className="m-5 mt-4 pl-6 bg-white rounded-3xl dark:bg-s_dark-75">
+    <TouchableOpacity className="m-5 mt-4 pl-6 bg-white rounded-3xl dark:bg-s_dark_navy-75">
       <View className="flex-row pt-5">
         <View
           className="rounded-3xl w-20 h-20 flex justify-center items-center"
