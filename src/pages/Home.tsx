@@ -58,9 +58,14 @@ export const Home = () => {
   );
 
   let totalBudget = 0;
+  let budgetedSpend = 0;
   if (budgetedCategories.length > 0) {
     budgetedCategories.forEach((i) => {
       totalBudget += i.budget;
+      i.linkingObjects<Transaction>("Transaction", "category")
+          .forEach((trans) => {
+            budgetedSpend += trans.amount;
+          });
     });
   }
 
@@ -131,7 +136,7 @@ export const Home = () => {
           Left to spend in January
         </Text>
         <Text className="text-s_green-100 relative text-6xl font-semibold text-center pt-4">
-          {formatCurrency((totalBudget - expenseSum) / 100)}
+          {formatCurrency((totalBudget - budgetedSpend) / 100)}
         </Text>
         <ScrollView style={{ flex: 1 }}>
           <CashflowCard

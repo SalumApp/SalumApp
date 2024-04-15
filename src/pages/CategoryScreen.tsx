@@ -48,10 +48,10 @@ export const CategoryScreen = () => {
   const navigation = useNavigation<NavigationProp<any>>();
 
   const expenseCategories = useQuery(Category, (collection) => {
-    return collection.filtered("isExpense == $0", true);
+    return collection.filtered("isExpense != $0", false);
   });
   const incomeCategories = useQuery(Category, (collection) => {
-    return collection.filtered("isExpense == $0", false);
+    return collection.filtered("isExpense != $0", true);
   });
 
   return (

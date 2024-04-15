@@ -89,7 +89,6 @@ const initializeDataIfNeeded = async () => {
     realm.write(() => {
       realm.create("Category", {
         title: "Uncategorized",
-        isExpense: true,
         color: "rgb(253 60 74)",
         glyph: "More",
         hasBudget: false,

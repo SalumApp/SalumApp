@@ -18,7 +18,7 @@ export const NewBudgetScreen = () => {
   const [key, setKey] = React.useState(0);
 
   const categories = useQuery(Category, (collection) => {
-    return collection.filtered("isExpense == $0", true);
+    return collection.filtered("isExpense != $0", false);
   });
 
   const [selectedCategory, setSelectedCategory] = React.useState(categories[0]);

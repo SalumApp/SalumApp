@@ -34,11 +34,11 @@ export const NewTransaction = ({ transactionType }: NewTransactionProps) => {
   let categories: Realm.Results<Category>;
   if (transactionType === "income") {
     categories = useQuery(Category, (collection) => {
-      return collection.filtered("isExpense == $0", false);
+      return collection.filtered("isExpense != $0", true);
     });
   } else {
     categories = useQuery(Category, (collection) => {
-      return collection.filtered("isExpense == $0", true);
+      return collection.filtered("isExpense != $0", false);
     });
   }
   /* eslint-enable react-hooks/rules-of-hooks */

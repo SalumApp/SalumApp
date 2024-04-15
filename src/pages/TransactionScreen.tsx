@@ -100,11 +100,11 @@ export const TransactionScreen = () => {
       }
 
       if (showIncome) {
-        query = query.filtered("isExpense == $0", false);
+        query = query.filtered("isExpense != $0", true);
       }
 
       if (showExpense) {
-        query = query.filtered("isExpense == $0", true);
+        query = query.filtered("isExpense != $0", false);
       }
 
       return query.sorted(sortOption.field, sortOption.direction);

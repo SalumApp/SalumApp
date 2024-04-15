@@ -13,7 +13,7 @@ export class Category extends Realm.Object {
         objectType: "Transaction",
         property: "category",
       },
-      isExpense: "bool",
+      isExpense: "bool?",
       hasBudget: "bool",
       color: "string",
       budget: "int?",
@@ -23,8 +23,8 @@ export class Category extends Realm.Object {
   };
   title!: string;
   transactions!: Realm.List<Transaction>;
-  isExpense!: boolean;
   hasBudget!: boolean;
+  isExpense?: boolean;
   color: string;
   budget?: number;
   glyph?: string;
