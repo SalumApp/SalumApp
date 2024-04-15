@@ -21,7 +21,7 @@ export const BudgetScreen = () => {
   });
 
   return (
-    <SafeAreaInsetsView className="flex-1 bg-s_blue-100 dark:bg-s_dark_navy-75">
+    <SafeAreaInsetsView className="flex-1 bg-s_blue-100 dark:bg-s_blue-dark">
       <View className="h-4/5 bg-s_light-60 dark:bg-s_dark-100 absolute w-full bottom-0 rounded-t-3xl">
         <ScrollView>
           <View className="pt-2" />

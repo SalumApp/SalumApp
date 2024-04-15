@@ -59,7 +59,10 @@ export const NewTransfer = () => {
   };
 
   return (
-    <SafeAreaInsetsView key={key} className="flex-1 bg-s_yellow-100">
+    <SafeAreaInsetsView
+      key={key}
+      className="flex-1 bg-s_yellow-100 dark:bg-s_yellow-dark"
+    >
       <ExpenseNav
         title="New Transfer"
         titleColor="#FFFFFF"

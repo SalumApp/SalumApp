@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
+  useColorScheme,
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Realm from "realm";
@@ -14,6 +15,7 @@ import Realm from "realm";
 import SuccessSVG from "../../assets/GlyphProvider/glyph/User Interface/Glyph/success.svg";
 import { Account } from "../../models/Account";
 import { Category } from "../../models/Category";
+import { ThemeColor } from "../../utils/Theme";
 import { MyButton } from "../Button/Button";
 import { Toggle } from "../ControlElements/Toggle";
 import AttachFileField from "../InputElements/AttachFileField";
@@ -60,6 +62,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   const [selectedFreq, setSelectedFreq] = useState("Frequency");
   const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const colorScheme = useColorScheme();
 
   const handleFrequencyChange = (value: string) => {
     setSelectedFreq(value);
@@ -87,7 +90,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   return (
     <>
       <ScrollView
-        className="mt-4 w-full bg-white h-full rounded-t-3xl flex-1 mb-6"
+        className="mt-4 w-full bg-white h-full rounded-t-3xl flex-1 mb-6 dark:bg-s_dark-100"
         automaticallyAdjustKeyboardInsets
       >
         <View className="ml-2 mr-2 mt-6">
@@ -107,10 +110,12 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
         </View>
         <View className="ml-2 mr-2 mt-6">
           <TouchableOpacity
-            className="justify-center items-center mx-4 h-20 bg-white border border-gray-300 rounded-3xl px-4"
+            className="justify-center items-center mx-4 h-20 bg-s_light-100 dark:bg-s_dark-75 border border-gray-300 rounded-3xl px-4"
             onPress={() => setDateTimePickerVisibility(true)}
           >
-            <Text className="text-2xl">{transactionDate.toLocaleString()}</Text>
+            <Text className="text-2xl dark:text-s_light-80">
+              {transactionDate.toLocaleString()}
+            </Text>
           </TouchableOpacity>
           <DateTimePickerModal
             isVisible={isDateTimePickerVisible}
@@ -145,7 +150,13 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
         <View className="flex-row justify-between ml-2 mr-2 mt-8 mb-1">
           <Text
             className="ml-5 text-2xl mb-2"
-            style={{ color: isRecurring ? "#000000" : "#9CA3AF" }}
+            style={{
+              color: isRecurring
+                ? colorScheme === "dark"
+                  ? ThemeColor.s_light["80"]
+                  : ThemeColor.s_dark["100"]
+                : "#9CA3AF",
+            }}
           >
             Recurring
           </Text>
@@ -166,13 +177,15 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
             <View className="mb-2">
               <TouchableOpacity
                 onPress={() => setShowDatePicker(!showDatePicker)}
-                className="flex-row justify-between border border-gray-300 bg-white rounded-3xl h-20 ml-4 mr-4 mt-5"
+                className="flex-row justify-between border border-gray-300 bg-white dark:bg-s_dark-75 rounded-3xl h-20 ml-4 mr-4 mt-5"
               >
                 <View>
-                  <Text className="mt-5 ml-5 mb-1 text-2xl">End Date</Text>
+                  <Text className="mt-5 ml-5 mb-1 text-2xl dark:text-s_light-80">
+                    End Date
+                  </Text>
                 </View>
                 <View>
-                  <Text className="mt-5 ml-0 mr-5 text-2xl mb-1">
+                  <Text className="mt-5 ml-0 mr-5 text-2xl mb-1 dark:text-s_light-80">
                     {selectedEndDate ? selectedEndDate.toDateString() : "Never"}
                   </Text>
                 </View>

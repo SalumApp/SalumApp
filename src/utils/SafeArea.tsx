@@ -28,16 +28,24 @@ export const SafeAreaInsetsView: React.FC<SafeAreaViewInsetsProps> = ({
 
   return (
     <>
-      {topInsetColor && (
-        <View style={{ height: insets.top, backgroundColor: topInsetColor }} />
-      )}
       <View
         style={[defaultStyle, style]}
-        className={className || "absolute w-full h-full"}
+        className={className || "absolute flex-1 w-full h-full"}
         {...props}
       >
         {children}
       </View>
+
+      {topInsetColor && (
+        <View
+          style={{
+            height: insets.top,
+            width: "100%",
+            backgroundColor: topInsetColor,
+            position: "absolute",
+          }}
+        />
+      )}
     </>
   );
 };

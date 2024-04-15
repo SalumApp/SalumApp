@@ -31,7 +31,7 @@ const TransferForm: React.FC<TransferFormProps> = ({
 
   return (
     <>
-      <View className="w-full bg-white rounded-t-3xl">
+      <View className="w-full bg-white dark:bg-s_dark-100 rounded-t-3xl">
         <View className="mx-2 mt-6 mb-4 pt-2 flex-row justify-between">
           <View className="w-48">
             <DropdownMenuField

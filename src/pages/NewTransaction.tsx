@@ -155,10 +155,13 @@ export const NewTransaction = ({ transactionType }: NewTransactionProps) => {
   };
 
   let bg_color = "bg-s_yellow-100";
+  let bg_color_dark = "dark:bg-s_yellow-dark";
   if (transactionType === "expense") {
     bg_color = "bg-s_red-100";
+    bg_color_dark = "dark:bg-s_red-dark";
   } else if (transactionType === "income") {
     bg_color = "bg-s_green-100";
+    bg_color_dark = "dark:bg-s_green-dark";
   }
 
   let navTitle = "New Expense";
@@ -167,7 +170,7 @@ export const NewTransaction = ({ transactionType }: NewTransactionProps) => {
   }
 
   return (
-    <SafeAreaInsetsView key={key} className={`flex-1 ${bg_color}`}>
+    <SafeAreaInsetsView className={`${bg_color} ${bg_color_dark}`} key={key}>
       <ExpenseNav
         title={navTitle}
         titleColor="#FFFFFF"

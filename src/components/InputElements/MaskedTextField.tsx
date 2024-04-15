@@ -15,7 +15,7 @@ const MaskedTextField = ({ customPlaceholder = "Input..." }) => {
   return (
     <View className="relative p-4">
       <TextInput
-        className="h-16 bg-white border border-gray-300 rounded-2xl px-4 pr-14 text-xl"
+        className="h-16 bg-white dark:bg-s_dark-75 border border-gray-300 rounded-2xl px-4 pr-14 text-xl"
         onChangeText={setValue}
         value={value}
         placeholder={customPlaceholder}

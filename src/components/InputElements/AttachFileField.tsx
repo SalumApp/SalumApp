@@ -98,7 +98,7 @@ const AttachFileField = ({
             <Image source={{ uri: image }} style={{ width: 40, height: 40 }} />
           </View>
         ) : (
-          <View className="flex-row items-center justify-center px-4 border-dashed border border-gray-300 bg-white rounded-3xl h-20">
+          <View className="flex-row items-center justify-center px-4 border-dashed border border-gray-300 bg-white dark:bg-s_dark-75 rounded-3xl h-20">
             <Attachment width={40} height={40} fill="#91919F" />
             <Text className="text-2xl" style={{ color: "#9CA3AF" }}>
               {customPlaceholder}
