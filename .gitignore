@@ -4,10 +4,10 @@
 android/
 ios/
 # Expo
+.expo/
 .expo/web/cache
 coverage/**/*
 node_modules/
-.expo/
 dist/
 npm-debug.*
 *.jks
@@ -40,8 +40,8 @@ DerivedData
 ios/.xcode.env.local
 
 # Android/IntelliJ
-.idea
-.gradle
+.idea/
+.gradle/
 local.properties
 *.iml
 *.hprof

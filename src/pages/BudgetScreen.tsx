@@ -23,38 +23,38 @@ export const BudgetScreen = () => {
   return (
     <SafeAreaInsetsView className="flex-1 bg-s_blue-100 dark:bg-s_blue-dark">
       <View className="h-4/5 bg-s_light-60 dark:bg-s_dark-100 absolute w-full bottom-0 rounded-t-3xl">
-        <ScrollView>
-          <View className="pt-2" />
-          {categories.length === 0 && (
-            <View className="flex-1 items-center justify-center h-full">
-              <Text className="flex-col text-2xl self-center align-middle">
-                No Data
-              </Text>
-            </View>
-          )}
-          {categories.length !== 0 && (
-            <View>
-              {categories.map((category) => {
-                let usedAmount = 0;
-                category
-                  .linkingObjects<Transaction>("Transaction", "category")
-                  .forEach((trans) => {
-                    usedAmount += trans.amount;
-                  });
-                return (
-                  <BudgetCard
-                    key={category.title}
-                    totalAmount={category.budget / 100}
-                    usedAmount={usedAmount / 100}
-                    categoryTitle={category.title}
-                    categoryColor={category.color}
-                    currency="USD"
-                  />
-                );
-              })}
-            </View>
-          )}
-        </ScrollView>
+        {categories.length === 0 && (
+          <View className="flex-1 items-center justify-center">
+            <Text className="flex-col text-2xl dark:text-s_light-80 self-center align-middle">
+              No Budgets Found
+            </Text>
+          </View>
+        )}
+        {categories.length !== 0 && (
+          <ScrollView>
+            <View className="pt-2" />
+              <View>
+                {categories.map((category) => {
+                  let usedAmount = 0;
+                  category
+                    .linkingObjects<Transaction>("Transaction", "category")
+                    .forEach((trans) => {
+                      usedAmount += trans.amount;
+                    });
+                  return (
+                    <BudgetCard
+                      key={category.title}
+                      totalAmount={category.budget / 100}
+                      usedAmount={usedAmount / 100}
+                      categoryTitle={category.title}
+                      categoryColor={category.color}
+                      currency="USD"
+                    />
+                  );
+                })}
+              </View>
+          </ScrollView>
+        )}
         <View className="h-20 mb-32">
           <MyButton
             onPress={() => navigation.navigate("new budget")}
