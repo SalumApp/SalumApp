@@ -4,11 +4,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as React from "react";
 import {
   ScrollView,
-  Text,
   TouchableOpacity,
   useColorScheme,
   useWindowDimensions,
   View,
+  Text,
 } from "react-native";
 import { Results } from "realm";
 
@@ -18,7 +18,7 @@ import { TopNav } from "../components/Navigation/TopNav";
 import { Category } from "../models/Category";
 import { Transaction } from "../models/Transaction";
 import { getIcon } from "../utils/GlyphProvider";
-import { formatCurrency } from "../utils/Misc";
+import { formatCurrency, getCurrentMonth } from "../utils/Misc";
 import { SafeAreaInsetsView } from "../utils/SafeArea";
 
 export const Home = () => {
@@ -62,10 +62,11 @@ export const Home = () => {
   if (budgetedCategories.length > 0) {
     budgetedCategories.forEach((i) => {
       totalBudget += i.budget;
-      i.linkingObjects<Transaction>("Transaction", "category")
-          .forEach((trans) => {
-            budgetedSpend += trans.amount;
-          });
+      i.linkingObjects<Transaction>("Transaction", "category").forEach(
+        (trans) => {
+          budgetedSpend += trans.amount;
+        },
+      );
     });
   }
 
@@ -129,15 +130,23 @@ export const Home = () => {
               )}
             </TouchableOpacity>
           }
-          onRightPress={() => console.log(expenseCategories)}
           titleColor={colorScheme === "dark" ? "#FFFFFF" : "#000000"}
         />
-        <Text className="relative text-xl text-s_light-20 text-center pt-4">
-          Left to spend in January
-        </Text>
-        <Text className="text-s_green-100 relative text-6xl font-semibold text-center pt-4">
-          {formatCurrency((totalBudget - budgetedSpend) / 100)}
-        </Text>
+        {budgetedCategories.length === 0 && (
+          <Text className="relative text-xl text-s_light-20 text-center pt-4">
+            No Budget Configured
+          </Text>
+        )}
+        {budgetedCategories.length !== 0 && (
+          <>
+            <Text className="relative text-xl text-s_light-20 text-center pt-4">
+              Left to spend in {getCurrentMonth()}
+            </Text>
+            <Text className="text-s_green-100 relative text-6xl font-semibold text-center pt-4">
+              {formatCurrency((totalBudget - budgetedSpend) / 100)}
+            </Text>
+          </>
+        )}
         <ScrollView style={{ flex: 1 }}>
           <CashflowCard
             spendingNumber={expenseSum / 100}
