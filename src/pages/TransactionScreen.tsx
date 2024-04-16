@@ -4,7 +4,6 @@ import { useQuery } from "@realm/react";
 import * as React from "react";
 import { useState } from "react";
 import {
-  Animated,
   Modal,
   ScrollView,
   Text,
@@ -249,132 +248,123 @@ export const TransactionScreen = () => {
       </SafeAreaInsetsView>
 
       <Modal visible={isBottomSheetVisible} transparent animationType="slide">
+        <View className="absolute h-full w-full bg-s_dark-100op" />
         <TouchableWithoutFeedback
           onPress={() => setIsBottomSheetVisible(false)}
         >
-          <View className="flex-1 bg-s_dark-100op justify-end">
-            <Animated.View
-              className="bg-s_light-100 rounded-t-3xl"
-              style={{ maxHeight: "70%" }}
-            >
-              <View className="items-center py-2.5 pt-4">
-                <View className="w-16 h-1.5 bg-s_light-20 rounded-3xl mt-1" />
-              </View>
-              <ScrollView className="flex-col">
-                <View className="flex-row px-6 pb-4 items-center justify-between">
-                  <Text className="text-2xl font-medium">
-                    Filter Transaction
-                  </Text>
-                  <PillButtonInteractive
-                    onPress={handleReset}
-                    isPressed={false}
-                    text="Reset"
-                    height={10}
-                    width={24}
-                    textSize="xl"
-                  />
-                </View>
-                <Text className="text-2xl font-medium pb-4 px-6">
-                  Filter By
-                </Text>
-                <View className="flex-row px-6 justify-between">
-                  <PillButtonInteractive
-                    onPress={handleIncome}
-                    isPressed={showIncome}
-                    text="Income"
-                    height={16}
-                    width={32}
-                    textSize="xl"
-                  />
-                  <PillButtonInteractive
-                    onPress={handleExpense}
-                    isPressed={showExpense}
-                    text="Expense"
-                    height={16}
-                    width={32}
-                    textSize="xl"
-                  />
-                </View>
-                <Text className="text-2xl font-medium pb-4 px-6 pt-4">
-                  Sort By
-                </Text>
-                <View className="flex-row px-6 justify-between">
-                  <View className="flex-col justify-between">
-                    <PillButtonInteractive
-                      onPress={() => setSortOption(SORT_OPTIONS.HIGHEST)}
-                      isPressed={sortOption === SORT_OPTIONS.HIGHEST}
-                      text="Highest"
-                      height={16}
-                      width={32}
-                      textSize="xl"
-                    />
-                    <View className="h-4" />
-                    <PillButtonInteractive
-                      onPress={() => setSortOption(SORT_OPTIONS.LOWEST)}
-                      isPressed={sortOption === SORT_OPTIONS.LOWEST}
-                      text="Lowest"
-                      height={16}
-                      width={32}
-                      textSize="xl"
-                    />
-                  </View>
-                  <View className="flex-col justify-between">
-                    <PillButtonInteractive
-                      onPress={() => setSortOption(SORT_OPTIONS.NEWEST)}
-                      isPressed={sortOption === SORT_OPTIONS.NEWEST}
-                      text="Newest"
-                      height={16}
-                      width={32}
-                      textSize="xl"
-                    />
-                    <PillButtonInteractive
-                      onPress={() => setSortOption(SORT_OPTIONS.OLDEST)}
-                      isPressed={sortOption === SORT_OPTIONS.OLDEST}
-                      text="Oldest"
-                      height={16}
-                      width={32}
-                      textSize="xl"
-                    />
-                  </View>
-                  <View className="flex-col justify-between">
-                    <PillButtonInteractive
-                      onPress={() => setSortOption(SORT_OPTIONS.AtoZ)}
-                      isPressed={sortOption === SORT_OPTIONS.AtoZ}
-                      text="A-to-Z"
-                      height={16}
-                      width={32}
-                      textSize="xl"
-                    />
-                    <PillButtonInteractive
-                      onPress={() => setSortOption(SORT_OPTIONS.ZtoA)}
-                      isPressed={sortOption === SORT_OPTIONS.ZtoA}
-                      text="Z-to-A"
-                      height={16}
-                      width={32}
-                      textSize="xl"
-                    />
-                  </View>
-                </View>
-                <Text className="text-2xl font-medium pb-4 px-6 pt-4">
-                  Category
-                </Text>
-                <View className="mx-2">
-                  <DropdownMenuField
-                    options={categories.map((i) => i.title)}
-                    placeholder="Category"
-                    onValueChange={() => console.log("dummy")}
-                  />
-                </View>
-                <View className="pb-8 pt-2">
-                  <MyButton
-                    onPress={() => setIsBottomSheetVisible(false)}
-                    text="Apply"
-                  />
-                </View>
-              </ScrollView>
-            </Animated.View>
-          </View>
+          <View className="flex-1" />
         </TouchableWithoutFeedback>
+        <View className="bg-s_light-100 rounded-t-3xl justify-end">
+          <View className="items-center py-2.5 pt-4 bg-transparent">
+            <View className="w-16 h-1.5 bg-s_light-20 rounded-3xl mt-1" />
+          </View>
+          <View className="flex-col min-h-fit">
+            <View className="flex-row px-6 pb-4 items-center justify-between">
+              <Text className="text-2xl font-medium">Filter Transaction</Text>
+              <PillButtonInteractive
+                onPress={handleReset}
+                isPressed={false}
+                text="Reset"
+                height={10}
+                width={24}
+                textSize="xl"
+              />
+            </View>
+            <Text className="text-2xl font-medium pb-4 px-6">Filter By</Text>
+            <View className="flex-row px-6 justify-between">
+              <PillButtonInteractive
+                onPress={handleIncome}
+                isPressed={showIncome}
+                text="Income"
+                height={16}
+                width={32}
+                textSize="xl"
+              />
+              <PillButtonInteractive
+                onPress={handleExpense}
+                isPressed={showExpense}
+                text="Expense"
+                height={16}
+                width={32}
+                textSize="xl"
+              />
+            </View>
+            <Text className="text-2xl font-medium pb-4 px-6 pt-4">Sort By</Text>
+            <View className="flex-row px-6 justify-between">
+              <View className="flex-col justify-between">
+                <PillButtonInteractive
+                  onPress={() => setSortOption(SORT_OPTIONS.HIGHEST)}
+                  isPressed={sortOption === SORT_OPTIONS.HIGHEST}
+                  text="Highest"
+                  height={16}
+                  width={32}
+                  textSize="xl"
+                />
+                <View className="h-4" />
+                <PillButtonInteractive
+                  onPress={() => setSortOption(SORT_OPTIONS.LOWEST)}
+                  isPressed={sortOption === SORT_OPTIONS.LOWEST}
+                  text="Lowest"
+                  height={16}
+                  width={32}
+                  textSize="xl"
+                />
+              </View>
+              <View className="flex-col justify-between">
+                <PillButtonInteractive
+                  onPress={() => setSortOption(SORT_OPTIONS.NEWEST)}
+                  isPressed={sortOption === SORT_OPTIONS.NEWEST}
+                  text="Newest"
+                  height={16}
+                  width={32}
+                  textSize="xl"
+                />
+                <PillButtonInteractive
+                  onPress={() => setSortOption(SORT_OPTIONS.OLDEST)}
+                  isPressed={sortOption === SORT_OPTIONS.OLDEST}
+                  text="Oldest"
+                  height={16}
+                  width={32}
+                  textSize="xl"
+                />
+              </View>
+              <View className="flex-col justify-between">
+                <PillButtonInteractive
+                  onPress={() => setSortOption(SORT_OPTIONS.AtoZ)}
+                  isPressed={sortOption === SORT_OPTIONS.AtoZ}
+                  text="A-to-Z"
+                  height={16}
+                  width={32}
+                  textSize="xl"
+                />
+                <PillButtonInteractive
+                  onPress={() => setSortOption(SORT_OPTIONS.ZtoA)}
+                  isPressed={sortOption === SORT_OPTIONS.ZtoA}
+                  text="Z-to-A"
+                  height={16}
+                  width={32}
+                  textSize="xl"
+                />
+              </View>
+            </View>
+            <Text className="text-2xl font-medium pb-4 px-6 pt-4">
+              Category
+            </Text>
+            <View className="mx-2">
+              <DropdownMenuField
+                options={categories.map((i) => i.title)}
+                placeholder="Category"
+                onValueChange={() => console.log("dummy")}
+              />
+            </View>
+            <View className="mb-8 mt-2 h-20">
+              <MyButton
+                onPress={() => setIsBottomSheetVisible(false)}
+                text="Apply"
+              />
+            </View>
+          </View>
+        </View>
       </Modal>
     </>
   );
