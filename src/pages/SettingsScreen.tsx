@@ -2,15 +2,9 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import * as React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
-import ContactSVG from "../assets/GlyphProvider/glyph/Communication/Glyph/contact.svg";
-import PiechartSVG from "../assets/GlyphProvider/glyph/Finance/Glyph/piechart.svg";
-import MuseumSVG from "../assets/GlyphProvider/glyph/Travel/Glyph/museum.svg";
-import LockSVG from "../assets/GlyphProvider/glyph/User Interface/Glyph/lock.svg";
-import SettingsSVG from "../assets/GlyphProvider/glyph/User Interface/Glyph/settings.svg";
-import TrashSVG from "../assets/GlyphProvider/glyph/User Interface/Glyph/trash.svg";
-import CloudySVG from "../assets/GlyphProvider/glyph/Weather/Glyph/cloudy.svg";
 import { SafeAreaInsetsView } from "../utils/SafeArea";
 import { ThemeColor } from "../utils/Theme";
+import { getIcon } from "../utils/GlyphProvider";
 
 export const SettingsScreen = () => {
   const navigation = useNavigation<NavigationProp<any>>();
@@ -32,7 +26,7 @@ export const SettingsScreen = () => {
               onPress={() => navigation.navigate("manage category")}
             >
               <View className="bg-s_blue-20 rounded-3xl w-16 h-16 ml-6 flex justify-center items-center">
-                <PiechartSVG width={35} height={35} fill={iconMainColor} />
+                {getIcon("Pie-chart", 35, 35, iconMainColor)}
               </View>
               <Text className="text-xl font-medium ml-6 dark:text-s_light-80">
                 Manage Categories
@@ -40,7 +34,7 @@ export const SettingsScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity className="flex-row border-t border-gray-300 items-center h-28">
               <View className="bg-s_blue-20 rounded-3xl w-16 h-16 ml-6 flex justify-center items-center">
-                <MuseumSVG width={35} height={35} fill={iconMainColor} />
+                {getIcon("Museum", 35, 35, iconMainColor)}
               </View>
               <Text className="text-xl font-medium ml-6 dark:text-s_light-80">
                 Manage Accounts
@@ -48,7 +42,7 @@ export const SettingsScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity className="flex-row border-t border-gray-300 items-center h-28">
               <View className="bg-s_blue-20 rounded-3xl w-16 h-16 ml-6 flex justify-center items-center">
-                <ContactSVG width={35} height={35} fill={iconMainColor} />
+                {getIcon("Contact", 35, 35, iconMainColor)}
               </View>
               <Text className="text-xl font-medium ml-6 dark:text-s_light-80">
                 Manage Friends
@@ -56,7 +50,7 @@ export const SettingsScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity className="flex-row border-t border-gray-300 items-center h-28">
               <View className="bg-s_blue-20 rounded-3xl w-16 h-16 ml-6 flex justify-center items-center">
-                <CloudySVG width={35} height={35} fill={iconMainColor} />
+                {getIcon("Cloudy", 35, 35, iconMainColor)}
               </View>
               <Text className="text-xl font-medium ml-6 dark:text-s_light-80">
                 Backup & Sync
@@ -64,7 +58,7 @@ export const SettingsScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity className="flex-row border-t border-gray-300 items-center h-28">
               <View className="bg-s_blue-20 rounded-3xl w-16 h-16 ml-6 flex justify-center items-center">
-                <LockSVG width={35} height={35} fill={iconMainColor} />
+                {getIcon("Lock", 35, 35, iconMainColor)}
               </View>
               <Text className="text-xl font-medium ml-6 dark:text-s_light-80">
                 PIN and Biometrics
@@ -72,7 +66,7 @@ export const SettingsScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity className="flex-row border-t border-gray-300 items-center h-28">
               <View className="bg-s_blue-20 rounded-3xl w-16 h-16 ml-6 flex justify-center items-center">
-                <SettingsSVG width={35} height={35} fill={iconMainColor} />
+                {getIcon("Settings", 35, 35, iconMainColor)}
               </View>
               <Text className="text-xl font-medium ml-6 dark:text-s_light-80">
                 Settings
@@ -83,7 +77,7 @@ export const SettingsScreen = () => {
           <View className="mx-10 mt-4 bg-s_light-100 border border-s_light-20 rounded-3xl dark:bg-s_dark_navy-75">
             <TouchableOpacity className="flex-row items-center h-28">
               <View className="bg-s_red-20 rounded-3xl w-16 h-16 ml-6 flex justify-center items-center">
-                <TrashSVG width={35} height={35} fill={iconDangerColor} />
+                {getIcon("Trash", 35, 35, iconDangerColor)}
               </View>
               <Text className="text-xl font-medium ml-6 color-s_red-100">
                 Erase Data & Reset

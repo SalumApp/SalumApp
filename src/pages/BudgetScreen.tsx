@@ -33,26 +33,26 @@ export const BudgetScreen = () => {
         {categories.length !== 0 && (
           <ScrollView>
             <View className="pt-2" />
-              <View>
-                {categories.map((category) => {
-                  let usedAmount = 0;
-                  category
-                    .linkingObjects<Transaction>("Transaction", "category")
-                    .forEach((trans) => {
-                      usedAmount += trans.amount;
-                    });
-                  return (
-                    <BudgetCard
-                      key={category.title}
-                      totalAmount={category.budget / 100}
-                      usedAmount={usedAmount / 100}
-                      categoryTitle={category.title}
-                      categoryColor={category.color}
-                      currency="USD"
-                    />
-                  );
-                })}
-              </View>
+            <View>
+              {categories.map((category) => {
+                let usedAmount = 0;
+                category
+                  .linkingObjects<Transaction>("Transaction", "category")
+                  .forEach((trans) => {
+                    usedAmount += trans.amount;
+                  });
+                return (
+                  <BudgetCard
+                    key={category.title}
+                    totalAmount={category.budget / 100}
+                    usedAmount={usedAmount / 100}
+                    categoryTitle={category.title}
+                    categoryColor={category.color}
+                    currency="USD"
+                  />
+                );
+              })}
+            </View>
           </ScrollView>
         )}
         <View className="h-20 mb-32">

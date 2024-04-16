@@ -55,6 +55,16 @@ import Glyph_Trash from "../assets/Glyph/trash.svg";
 import Glyph_Vault from "../assets/Glyph/vault.svg";
 import Glyph_Wallet from "../assets/Glyph/wallet.svg";
 import Glyph_Weightlifiting from "../assets/Glyph/weightlifiting.svg";
+import Glyph_Sort from "../assets/Glyph/sort.svg";
+import Glyph_Lock from "../assets/Glyph/lock.svg";
+import Glyph_Warning from "../assets/Glyph/warning.svg";
+import Glyph_Block from "../assets/Glyph/block.svg";
+import Glyph_Arrow_down_2 from "../assets/Glyph/arrow-down-2.svg";
+import Glyph_Cloudy from "../assets/Glyph/cloudy.svg";
+import Glyph_Contact from "../assets/Glyph/contact.svg";
+import Glyph_Pie_chart from "../assets/Glyph/pie-chart.svg";
+import Glyph_Organization from "../assets/Glyph/organization.svg";
+import Glyph_Globe from "../assets/Glyph/globe.svg";
 
 export const getIcon = (
   glyph: string,
@@ -235,6 +245,36 @@ export const getIcon = (
       break;
     case "Success":
       IconComponent = Glyph_Success;
+      break;
+    case "Sort":
+      IconComponent = Glyph_Sort;
+      break;
+    case "Lock":
+      IconComponent = Glyph_Lock;
+      break;
+    case "Warning":
+      IconComponent = Glyph_Warning;
+      break;
+    case "Block":
+      IconComponent = Glyph_Block;
+      break;
+    case "Arrow-down-2":
+      IconComponent = Glyph_Arrow_down_2;
+      break;
+    case "Cloudy":
+      IconComponent = Glyph_Cloudy;
+      break;
+    case "Contact":
+      IconComponent = Glyph_Contact;
+      break;
+    case "Pie-chart":
+      IconComponent = Glyph_Pie_chart;
+      break;
+    case "Organization":
+      IconComponent = Glyph_Organization;
+      break;
+    case "Globe":
+      IconComponent = Glyph_Globe;
       break;
     default:
       IconComponent = Glyph_More;

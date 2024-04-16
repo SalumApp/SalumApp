@@ -7,7 +7,7 @@ import {
   Animated,
   Modal,
   ScrollView,
-  Text,
+  Text, TouchableOpacity,
   TouchableWithoutFeedback,
   useColorScheme,
   View,
@@ -22,6 +22,7 @@ import { TopNav } from "../components/Navigation/TopNav";
 import { Category } from "../models/Category";
 import { Transaction } from "../models/Transaction";
 import { SafeAreaInsetsView } from "../utils/SafeArea";
+import {getIcon} from "../utils/GlyphProvider";
 
 const SORT_OPTIONS = {
   NEWEST: { field: "datetime", direction: true },
@@ -206,8 +207,20 @@ export const TransactionScreen = () => {
         <TopNav
           title="Transactions"
           titleColor={colorScheme === "dark" ? "#FFFFFF" : "#000000"}
-          onLeftPress={() => console.log("Left")}
-          onRightPress={() => setIsBottomSheetVisible(true)}
+          onLeftPress={() => console.log("clicked")}
+          right={
+            <TouchableOpacity
+                onPress={() => setIsBottomSheetVisible(true)}
+                className="mr-4 p-1 rounded-xl border border-s_light-40"
+            >
+              {getIcon(
+                  "Sort",
+                  32,
+                  32,
+                  colorScheme === "dark" ? "#FFFFFF" : "#000000",
+              )}
+            </TouchableOpacity>
+          }
         />
 
         {transactions.length === 0 && (
