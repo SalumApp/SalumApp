@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-import WarningSVG from "../../assets/GlyphProvider/glyph/User Interface/Glyph/warning.svg";
+import { IconGlyph } from "../../assets/Glyph/IconGlyph";
 import { formatCurrency } from "../../utils/Misc";
 
 interface BudgetCardProps {
@@ -45,7 +45,7 @@ const BudgetCard: React.FC<BudgetCardProps> = ({
           </View>
           {remainingAmount === 0 && (
             <View className="mr-4">
-              <WarningSVG fill="#FD3C4A" height={28} width={28} />
+              <IconGlyph glyph="Warning" dim={28} fill="#FD3C4A" />
             </View>
           )}
         </View>

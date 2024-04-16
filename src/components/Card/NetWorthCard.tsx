@@ -2,7 +2,7 @@ import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { LineChart } from "react-native-gifted-charts";
 
-import { getIcon } from "../../utils/GlyphProvider";
+import { IconGlyph } from "../../assets/Glyph/IconGlyph";
 import {
   addAlpha,
   formatCurrency,
@@ -40,7 +40,7 @@ const NetWorthCard = ({ netWorth = 0 }: NetWorthCardProps) => {
           className="rounded-3xl w-20 h-20 flex justify-center items-center"
           style={{ backgroundColor: addAlpha(iconColor, 0.2) }}
         >
-          {getIcon("Salary", 52, 52, iconColor)}
+          <IconGlyph glyph="Salary" dim={52} fill={iconColor} />
         </View>
         <View className="pl-4 flex-col">
           <Text className="text-2xl pt-1.5 font-medium dark:text-s_light-100">

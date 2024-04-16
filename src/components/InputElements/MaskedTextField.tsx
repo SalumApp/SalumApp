@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { TextInput, TouchableOpacity, View } from "react-native";
 
-import HideSvg from "../../assets/GlyphProvider/glyph/User Interface/Glyph/hide.svg"; // Direct SVG import
-import ShowSvg from "../../assets/GlyphProvider/glyph/User Interface/Glyph/show.svg"; // Direct SVG import
+import { IconGlyph } from "../../assets/Glyph/IconGlyph";
 
 const MaskedTextField = ({ customPlaceholder = "Input..." }) => {
   const [value, setValue] = useState("");
@@ -27,9 +26,9 @@ const MaskedTextField = ({ customPlaceholder = "Input..." }) => {
         className="absolute inset-y-0 right-7 flex justify-center items-center" // Adjust for alignment
       >
         {isPasswordVisible ? (
-          <HideSvg width={30} height={30} fill="#91919F" />
+          <IconGlyph glyph="Hide" dim={30} fill="#91919F" />
         ) : (
-          <ShowSvg width={30} height={30} fill="#91919F" />
+          <IconGlyph glyph="Show" dim={30} fill="#91919F" />
         )}
       </TouchableOpacity>
     </View>

@@ -8,9 +8,7 @@ import {
   ViewStyle,
 } from "react-native";
 
-import TransferSvg from "../../assets/GlyphProvider/glyph/Finance/Glyph/currency-exchange.svg";
-import ExpenseSvg from "../../assets/GlyphProvider/glyph/Finance/Glyph/expense.svg";
-import IncomeSvg from "../../assets/GlyphProvider/glyph/Finance/Glyph/income.svg";
+import { IconGlyph } from "../../assets/Glyph/IconGlyph";
 
 interface NavProps {
   routeName: string;
@@ -111,21 +109,21 @@ export const AnimatedButton = ({
         <Animated.View
           style={[styles.button, transferStyle, { backgroundColor: "#EEA519" }]}
         >
-          <TransferSvg fill="white" width={36} height={36} />
+          <IconGlyph glyph="Transaction" fill="white" dim={36} />
         </Animated.View>
       </TouchableWithoutFeedback>
       <TouchableWithoutFeedback onPress={switchIncome}>
         <Animated.View
           style={[styles.button, incomeStyle, { backgroundColor: "#00A86B" }]}
         >
-          <IncomeSvg fill="white" width={36} height={36} />
+          <IconGlyph glyph="Income" fill="white" dim={36} />
         </Animated.View>
       </TouchableWithoutFeedback>
       <TouchableWithoutFeedback onPress={switchExpense}>
         <Animated.View
           style={[styles.button, expenseStyle, { backgroundColor: "#FD3C4A" }]}
         >
-          <ExpenseSvg fill="white" width={36} height={36} />
+          <IconGlyph glyph="Expense" fill="white" dim={36} />
         </Animated.View>
       </TouchableWithoutFeedback>
       <TouchableWithoutFeedback onPress={toggleMenu}>

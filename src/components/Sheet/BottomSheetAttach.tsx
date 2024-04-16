@@ -8,9 +8,7 @@ import {
   View,
 } from "react-native";
 
-import GallerySvg from "../../assets/GlyphProvider/glyph/Communication/Glyph/gallery.svg";
-import DocSvg from "../../assets/GlyphProvider/glyph/Document/Glyph/file.svg";
-import CamSvg from "../../assets/GlyphProvider/glyph/User Interface/Glyph/camera.svg";
+import { IconGlyph } from "../../assets/Glyph/IconGlyph";
 
 interface BottomSheetAttachProps {
   visible: boolean;
@@ -46,7 +44,7 @@ const BottomSheetAttach: React.FC<BottomSheetAttachProps> = ({
                   className="flex items-center justify-center self-center ml-1.5 mr-1.5 bg-s_blue-20 rounded-3xl flex-1 w-1 h-28"
                   onPress={onPressCam}
                 >
-                  <CamSvg width={36} height={32} fill="#0077FF" />
+                  <IconGlyph glyph="Camera" dim={32} fill="#0077FF" />
                   <Text
                     className="mt-2 text-s_blue-100 text-xl font-semibold"
                     ellipsizeMode="tail"
@@ -59,7 +57,7 @@ const BottomSheetAttach: React.FC<BottomSheetAttachProps> = ({
                   className="flex items-center justify-center self-center ml-1.5 mr-1.5 bg-s_blue-20 rounded-3xl flex-1 w-1 h-28"
                   onPress={onPressGallery}
                 >
-                  <GallerySvg width={36} height={32} fill="#0077FF" />
+                  <IconGlyph glyph="Gallery" dim={40} fill="#0077FF" />
                   <Text
                     className="mt-2 text-s_blue-100 text-xl font-semibold"
                     ellipsizeMode="tail"
@@ -72,7 +70,7 @@ const BottomSheetAttach: React.FC<BottomSheetAttachProps> = ({
                   className="flex items-center justify-center self-center ml-1.5 mr-1.5 bg-s_blue-20 rounded-3xl flex-1 w-1 h-28"
                   onPress={onPressDoc}
                 >
-                  <DocSvg width={36} height={32} fill="#0077FF" />
+                  <IconGlyph glyph="File" dim={36} fill="#0077FF" />
                   <Text
                     className="mt-2 text-s_blue-100 text-xl font-semibold"
                     ellipsizeMode="tail"

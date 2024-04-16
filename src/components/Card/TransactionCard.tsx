@@ -1,8 +1,8 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
+import { IconGlyph } from "../../assets/Glyph/IconGlyph";
 import { Transaction } from "../../models/Transaction";
-import { getIcon } from "../../utils/GlyphProvider";
 import { addAlpha, formatCurrency, formatTime } from "../../utils/Misc";
 
 interface TransactionCardProps {
@@ -24,12 +24,11 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
           className="rounded-3xl w-20 h-20 flex justify-center items-center"
           style={{ backgroundColor: addAlpha(transaction.category.color, 0.2) }}
         >
-          {getIcon(
-            transaction.category.glyph,
-            52,
-            52,
-            transaction.category.color,
-          )}
+          <IconGlyph
+            glyph={transaction.category.glyph}
+            dim={52}
+            fill={transaction.category.color}
+          />
         </View>
         <View className="pl-4 flex-col">
           <Text className="text-xl pt-1.5 font-medium dark:text-s_light-80">

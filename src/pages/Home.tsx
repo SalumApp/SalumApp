@@ -12,12 +12,12 @@ import {
 } from "react-native";
 import { Results } from "realm";
 
+import { IconGlyph } from "../assets/Glyph/IconGlyph";
 import CashflowCard from "../components/Card/CashflowCard";
 import NetWorthCard from "../components/Card/NetWorthCard";
 import { TopNav } from "../components/Navigation/TopNav";
 import { Category } from "../models/Category";
 import { Transaction } from "../models/Transaction";
-import { getIcon } from "../utils/GlyphProvider";
 import { formatCurrency, getCurrentMonth } from "../utils/Misc";
 import { SafeAreaInsetsView } from "../utils/SafeArea";
 
@@ -114,7 +114,7 @@ export const Home = () => {
               onPress={() => console.log("clicked")}
               className="pl-5"
             >
-              {getIcon("Success", 32, 32, "green")}
+              <IconGlyph glyph="Success" dim={32} fill="green" />
             </TouchableOpacity>
           }
           right={
@@ -122,12 +122,7 @@ export const Home = () => {
               onPress={() => navigation.navigate("settings")}
               className="pr-5"
             >
-              {getIcon(
-                "Settings",
-                32,
-                32,
-                colorScheme === "dark" ? "#FFFFFF" : "#000000",
-              )}
+              <IconGlyph glyph="Settings" dim={32} fill="black" />
             </TouchableOpacity>
           }
           titleColor={colorScheme === "dark" ? "#FFFFFF" : "#000000"}

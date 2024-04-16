@@ -3,7 +3,7 @@ import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
 import { Image, Platform, Text, TouchableOpacity, View } from "react-native";
 
-import Attachment from "../../assets/GlyphProvider/glyph/User Interface/Glyph/attachment.svg";
+import { IconGlyph } from "../../assets/Glyph/IconGlyph";
 import BottomSheetAttach from "../Sheet/BottomSheetAttach";
 
 interface AttachFileFieldProp {
@@ -99,7 +99,7 @@ const AttachFileField = ({
           </View>
         ) : (
           <View className="flex-row items-center justify-center px-4 border-dashed border border-gray-300 bg-white dark:bg-s_dark-75 rounded-3xl h-20">
-            <Attachment width={40} height={40} fill="#91919F" />
+            <IconGlyph glyph="Attachment" dim={40} fill="#91919F" />
             <Text className="text-2xl" style={{ color: "#9CA3AF" }}>
               {customPlaceholder}
             </Text>

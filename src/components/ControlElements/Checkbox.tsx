@@ -1,8 +1,7 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
 
-import UncheckedSvg from "../../assets/GlyphProvider/glyph/User Interface/Glyph/checkbox-blank.svg";
-import CheckedSvg from "../../assets/GlyphProvider/glyph/User Interface/Glyph/checkbox.svg";
+import { IconGlyph } from "../../assets/Glyph/IconGlyph";
 
 interface CheckboxProps {
   isChecked: boolean;
@@ -23,9 +22,9 @@ export const Checkbox = ({ isChecked, onToggle, theme }: CheckboxProps) => {
   return (
     <TouchableOpacity onPress={onToggle} className="flex-row items-center">
       {isChecked ? (
-        <CheckedSvg width={120} height={40} fill={fillColorLight} />
+        <IconGlyph glyph="Checkbox" dim={40} fill={fillColorLight} />
       ) : (
-        <UncheckedSvg width={120} height={40} fill={fillColorLight} />
+        <IconGlyph glyph="Checkbox-blank" dim={40} fill={fillColorLight} />
       )}
     </TouchableOpacity>
   );

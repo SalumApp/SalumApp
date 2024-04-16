@@ -12,7 +12,7 @@ import {
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Realm from "realm";
 
-import SuccessSVG from "../../assets/GlyphProvider/glyph/User Interface/Glyph/success.svg";
+import { IconGlyph } from "../../assets/Glyph/IconGlyph";
 import { Account } from "../../models/Account";
 import { Category } from "../../models/Category";
 import { ThemeColor } from "../../utils/Theme";
@@ -90,7 +90,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   return (
     <>
       <ScrollView
-        className="mt-4 w-full bg-white h-full rounded-t-3xl flex-1 mb-6 dark:bg-s_dark-100"
+        className="mt-4 mb-20 w-full bg-white rounded-t-3xl dark:bg-s_dark-100"
         automaticallyAdjustKeyboardInsets
       >
         <View className="ml-2 mr-2 mt-6">
@@ -210,7 +210,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
           <TouchableWithoutFeedback onPress={handleConfirmationClick}>
             <View className="flex-1 bg-s_dark-100op justify-center items-center">
               <View className="flex-col bg-s_light-100 p-5 rounded-3xl items-center">
-                <SuccessSVG width={52} height={52} fill="#00A86B" />
+                <IconGlyph glyph="Success" dim={52} fill="#00A86B" />
                 <Text className="text-lg font-medium">
                   Transaction has been successfully added
                 </Text>

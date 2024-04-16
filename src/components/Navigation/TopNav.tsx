@@ -1,8 +1,7 @@
 import React, { ReactNode } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-import ArrowRet from "../../assets/GlyphProvider/glyph/Arrow/Glyph/arrow-left.svg";
-import More from "../../assets/GlyphProvider/glyph/User Interface/Glyph/more.svg";
+import { IconGlyph } from "../../assets/Glyph/IconGlyph";
 
 interface TopNavProps {
   title?: string;
@@ -27,7 +26,7 @@ export const TopNav = ({
 }: TopNavProps) => {
   const defaultLeft = onLeftPress && (
     <TouchableOpacity onPress={onLeftPress} className="pl-5">
-      <ArrowRet fill={titleColor} width={32} height={32} />
+      <IconGlyph glyph="Arrow-left" dim={32} fill={titleColor} />
     </TouchableOpacity>
   );
 
@@ -42,7 +41,7 @@ export const TopNav = ({
 
   const defaultRight = onRightPress && (
     <TouchableOpacity onPress={onRightPress} className="pr-5">
-      <More fill={titleColor} width={32} height={32} />
+      <IconGlyph glyph="More" dim={32} fill={titleColor} />
     </TouchableOpacity>
   );
 

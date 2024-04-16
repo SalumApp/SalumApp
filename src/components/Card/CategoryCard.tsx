@@ -1,8 +1,8 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
+import { IconGlyph } from "../../assets/Glyph/IconGlyph";
 import { Category } from "../../models/Category";
-import { getIcon } from "../../utils/GlyphProvider";
 import { addAlpha } from "../../utils/Misc";
 
 interface CategoryCardProps {
@@ -21,7 +21,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onPress }) => {
           className="rounded-3xl w-20 h-20 flex justify-center items-center"
           style={{ backgroundColor: addAlpha(category.color, 0.2) }}
         >
-          {getIcon(category.glyph, 52, 52, category.color)}
+          <IconGlyph glyph={category.glyph} dim={52} fill={category.color} />
         </View>
         <View className="pl-4 flex-1 justify-center">
           <Text className="text-xl font-medium dark:text-s_light-80">

@@ -7,13 +7,15 @@ import {
   Animated,
   Modal,
   ScrollView,
-  Text, TouchableOpacity,
+  Text,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   useColorScheme,
   View,
 } from "react-native";
 import { Results } from "realm";
 
+import { IconGlyph } from "../assets/Glyph/IconGlyph";
 import { MyButton } from "../components/Button/Button";
 import { PillButtonInteractive } from "../components/Button/PillButtonInteractive";
 import TransactionCard from "../components/Card/TransactionCard";
@@ -22,7 +24,6 @@ import { TopNav } from "../components/Navigation/TopNav";
 import { Category } from "../models/Category";
 import { Transaction } from "../models/Transaction";
 import { SafeAreaInsetsView } from "../utils/SafeArea";
-import {getIcon} from "../utils/GlyphProvider";
 
 const SORT_OPTIONS = {
   NEWEST: { field: "datetime", direction: true },
@@ -210,15 +211,14 @@ export const TransactionScreen = () => {
           onLeftPress={() => console.log("clicked")}
           right={
             <TouchableOpacity
-                onPress={() => setIsBottomSheetVisible(true)}
-                className="mr-4 p-1 rounded-xl border border-s_light-40"
+              onPress={() => setIsBottomSheetVisible(true)}
+              className="mr-4 p-1 rounded-xl border border-s_light-40"
             >
-              {getIcon(
-                  "Sort",
-                  32,
-                  32,
-                  colorScheme === "dark" ? "#FFFFFF" : "#000000",
-              )}
+              <IconGlyph
+                glyph="Sort"
+                dim={32}
+                fill={colorScheme === "dark" ? "#FFFFFF" : "#000000"}
+              />
             </TouchableOpacity>
           }
         />

@@ -187,7 +187,7 @@ export const NewTransaction = ({ transactionType }: NewTransactionProps) => {
             </Text>
           </TouchableOpacity>
         </View>
-        <View className="mt-4 flex-row items-center w-full ">
+        <View className="mt-4 flex-row items-center w-full">
           <Text className="text-white text-3xl pl-8 mr-1">
             {getCurrencySymbol(selectedCurrency)}
           </Text>

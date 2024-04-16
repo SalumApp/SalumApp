@@ -3,7 +3,7 @@ import { TextInput, View } from "react-native";
 
 interface PlainTextFieldProp {
   customPlaceholder: string;
-  onTextChange: (value: string) => void;
+  onTextChange?: (value: string) => void;
 }
 
 const PlainTextField = ({

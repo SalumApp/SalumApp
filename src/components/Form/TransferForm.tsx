@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { Modal, Text, TouchableWithoutFeedback, View } from "react-native";
 import Realm from "realm";
 
-import TransactionSvg from "../../assets/GlyphProvider/glyph/Finance/Glyph/transaction.svg";
-import SuccessSVG from "../../assets/GlyphProvider/glyph/User Interface/Glyph/success.svg";
+import { IconGlyph } from "../../assets/Glyph/IconGlyph";
 import { Account } from "../../models/Account";
 import { MyButton } from "../Button/Button";
 import DropdownMenuField from "../InputElements/DropdownMenuField";
@@ -43,7 +42,7 @@ const TransferForm: React.FC<TransferFormProps> = ({
             />
           </View>
           <View className="items-center justify-center">
-            <TransactionSvg width={45} height={45} fill="#91919F" />
+            <IconGlyph glyph="Transaction" dim={45} fill="#91919F" />
           </View>
           <View className="w-48">
             <DropdownMenuField
@@ -64,7 +63,7 @@ const TransferForm: React.FC<TransferFormProps> = ({
           <TouchableWithoutFeedback onPress={handleConfirmationClick}>
             <View className="flex-1 bg-s_dark-100op justify-center items-center">
               <View className="flex-col bg-s_light-100 p-5 rounded-3xl items-center">
-                <SuccessSVG width={52} height={52} fill="#00A86B" />
+                <IconGlyph glyph="Success" dim={52} fill="#00A86B" />
                 <Text className="text-lg font-medium">
                   Transfer has been successfully added
                 </Text>

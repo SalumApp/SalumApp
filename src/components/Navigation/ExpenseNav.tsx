@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-import ArrowRet from "../../assets/GlyphProvider/glyph/Arrow/Glyph/arrow-left.svg";
+import { IconGlyph } from "../../assets/Glyph/IconGlyph";
 
 interface ExpenseNavProps {
   title: string;
@@ -21,7 +21,7 @@ export const ExpenseNav = ({
         className="pl-4 h-12 justify-center"
       >
         <View className="justify-center">
-          <ArrowRet width={32} height={32} fill={titleColor} />
+          <IconGlyph glyph="Arrow-left" dim={32} fill={titleColor} />
         </View>
       </TouchableOpacity>
       <View className="flex-1 items-center">

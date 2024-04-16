@@ -3,10 +3,7 @@ import React from "react";
 import { TouchableOpacity, View, useColorScheme } from "react-native";
 import { CurvedBottomBarExpo } from "react-native-curved-bottom-bar";
 
-import PiechartSVG from "./src/assets/GlyphProvider/glyph/Finance/Glyph/piechart.svg";
-import TransactionSVG from "./src/assets/GlyphProvider/glyph/Finance/Glyph/transaction.svg";
-import HomeSVG from "./src/assets/GlyphProvider/glyph/User Interface/Glyph/home.svg";
-import Settings2SVG from "./src/assets/GlyphProvider/glyph/User Interface/Glyph/settings-2.svg";
+import { IconGlyph } from "./src/assets/Glyph/IconGlyph";
 import { AnimatedButton } from "./src/components/Button/AnimatedButton";
 import { BudgetScreen } from "./src/pages/BudgetScreen";
 import CategoryScreen from "./src/pages/CategoryScreen";
@@ -18,7 +15,6 @@ import { NewTransfer } from "./src/pages/NewTransfer";
 import { SettingsScreen } from "./src/pages/SettingsScreen";
 import { TransactionScreen } from "./src/pages/TransactionScreen";
 import { ThemeColor } from "./src/utils/Theme";
-// import { getIcon } from "./src/utils/GlyphProvider";
 
 interface BottomTabProps {
   tabRef: React.MutableRefObject<any>;
@@ -179,26 +175,26 @@ const BottomTabNavigator = ({ tabRef }: BottomTabProps) => {
 
     switch (routeName) {
       case "home":
-        IconComponent = HomeSVG;
+        IconComponent = "Home";
         break;
       case "transaction":
-        IconComponent = TransactionSVG;
+        IconComponent = "Transaction";
         iconStyle = { paddingRight: 40 }; // Add padding to the right
         break;
       case "budget":
-        IconComponent = PiechartSVG;
+        IconComponent = "Pie-chart";
         iconStyle = { paddingLeft: 40 }; // Add padding to the left
         break;
       case "settings":
-        IconComponent = Settings2SVG;
+        IconComponent = "Settings";
         break;
     }
 
     return (
       <View style={iconStyle}>
-        <IconComponent
-          width={25}
-          height={25}
+        <IconGlyph
+          glyph={IconComponent}
+          dim={25}
           fill={routeName === selectedTab ? "#0077FF" : "#C6C6C6"}
         />
       </View>
