@@ -28,31 +28,6 @@ module.exports = {
   },
   plugins: [
     [
-      "expo-font",
-      {
-        fonts: [
-          "./src/assets/fonts/Inter-Black.otf",
-          "./src/assets/fonts/Inter-BlackItalic.otf",
-          "./src/assets/fonts/Inter-Bold.otf",
-          "./src/assets/fonts/Inter-BoldItalic.otf",
-          "./src/assets/fonts/Inter-ExtraBold.otf",
-          "./src/assets/fonts/Inter-ExtraBoldItalic.otf",
-          "./src/assets/fonts/Inter-ExtraLight.otf",
-          "./src/assets/fonts/Inter-ExtraLightItalic.otf",
-          "./src/assets/fonts/Inter-Italic.otf",
-          "./src/assets/fonts/Inter-Light.otf",
-          "./src/assets/fonts/Inter-LightItalic.otf",
-          "./src/assets/fonts/Inter-Medium.otf",
-          "./src/assets/fonts/Inter-MediumItalic.otf",
-          "./src/assets/fonts/Inter-Regular.otf",
-          "./src/assets/fonts/Inter-SemiBold.otf",
-          "./src/assets/fonts/Inter-SemiBoldItalic.otf",
-          "./src/assets/fonts/Inter-Thin.otf",
-          "./src/assets/fonts/Inter-ThinItalic.otf",
-        ],
-      },
-    ],
-    [
       "expo-image-picker",
       {
         photosPermission: "Allow $(PRODUCT_NAME) to access your photos",

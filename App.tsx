@@ -3,7 +3,6 @@ import "react-native-get-random-values";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { RealmProvider } from "@realm/react";
 import Constants from "expo-constants";
-import { useFonts } from "expo-font";
 import React, { useEffect, useRef } from "react";
 import "./global.css";
 import { LogBox } from "react-native";
@@ -111,7 +110,7 @@ const initializeDataIfNeeded = async () => {
         title: "Bills & Utilities",
         isExpense: true,
         color: "rgb(127 61 255)",
-        glyph: "Recurring-bill",
+        glyph: "Recurring_bill",
         hasBudget: false,
       });
       realm.create("Category", {
@@ -132,7 +131,7 @@ const initializeDataIfNeeded = async () => {
         title: "Shopping",
         isExpense: true,
         color: "rgb(0, 121, 178)",
-        glyph: "Shopping-bag",
+        glyph: "Shopping_bag",
         hasBudget: false,
       });
       realm.create("Category", {
@@ -196,29 +195,6 @@ function App() {
   }, []);
 
   const tabBarRef = useRef(null);
-
-  const [fontsLoaded] = useFonts({
-    "Inter-Black": require("./src/assets/fonts/Inter-Black.otf"),
-    "Inter-BlackItalic": require("./src/assets/fonts/Inter-BlackItalic.otf"),
-    "Inter-Bold": require("./src/assets/fonts/Inter-Bold.otf"),
-    "Inter-BoldItalic": require("./src/assets/fonts/Inter-BoldItalic.otf"),
-    "Inter-ExtraBold": require("./src/assets/fonts/Inter-ExtraBold.otf"),
-    "Inter-ExtraBoldItalic": require("./src/assets/fonts/Inter-ExtraBoldItalic.otf"),
-    "Inter-ExtraLight": require("./src/assets/fonts/Inter-ExtraLight.otf"),
-    "Inter-ExtraLightItalic": require("./src/assets/fonts/Inter-ExtraLightItalic.otf"),
-    "Inter-Italic": require("./src/assets/fonts/Inter-Italic.otf"),
-    "Inter-Light": require("./src/assets/fonts/Inter-Light.otf"),
-    "Inter-LightItalic": require("./src/assets/fonts/Inter-LightItalic.otf"),
-    "Inter-Medium": require("./src/assets/fonts/Inter-Medium.otf"),
-    "Inter-MediumItalic": require("./src/assets/fonts/Inter-MediumItalic.otf"),
-    "Inter-Regular": require("./src/assets/fonts/Inter-Regular.otf"),
-    "Inter-SemiBold": require("./src/assets/fonts/Inter-SemiBold.otf"),
-    "Inter-SemiBoldItalic": require("./src/assets/fonts/Inter-SemiBoldItalic.otf"),
-    "Inter-Thin": require("./src/assets/fonts/Inter-Thin.otf"),
-    "Inter-ThinItalic": require("./src/assets/fonts/Inter-ThinItalic.otf"),
-  });
-
-  if (!fontsLoaded) return null;
 
   const navTheme = {
     ...DefaultTheme,

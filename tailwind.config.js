@@ -1,30 +1,8 @@
 /** @type {import('tailwindcss').Config} */
+
 module.exports = {
-  content: [
-    "./App.{js,jsx,ts,tsx}",
-    "./src/components/**/*.{js,jsx,ts,tsx}",
-    "./src/pages/*.{js,jsx,ts,tsx}",
-  ],
+  content: ["./App.{js,jsx,ts,tsx}", "./src/**/**/*.{js,jsx,ts,tsx}"],
   presets: [require("nativewind/preset")],
-  fontFamily: {
-    black: ["Inter-Black"],
-    blackitalic: ["Inter-BlackItalic"],
-    bold: ["Inter-Bold"],
-    bolditalic: ["Inter-BoldItalic"],
-    extrabold: ["Inter-ExtraBold"],
-    extrabolditalic: ["Inter-ExtraBoldItalic"],
-    extralight: ["Inter-ExtraLight"],
-    extralightitalic: ["Inter-ExtraLightItalic"],
-    italic: ["Inter-Italic"],
-    light: ["Inter-Light"],
-    lightitalic: ["Inter-LightItalic"],
-    medium: ["Inter-Medium"],
-    mediumitalic: ["Inter-MediumItalic"],
-    regular: ["Inter-Regular"],
-    semibold: ["Inter-SemiBold"],
-    semibolditalic: ["Inter-SemiBoldItalic"],
-    thin: ["Inter-Thin"],
-  },
   theme: {
     extend: {
       colors: {
@@ -103,17 +81,14 @@ module.exports = {
   plugins: [
     // Set a default value on the `:root` element
     ({ addBase }) => addBase({ ":root": { "--color-primary": "0, 119, 255" } }),
-    ({ addBase }) =>
-      addBase({ ":root": { "--color-secondary": "227, 229, 229" } }),
+    ({ addBase }) => addBase({ ":root": { "--color-secondary": "227, 229, 229" } }),
     ({ addBase }) => addBase({ ":root": { "--color-s_dark": "0, 0, 0" } }),
     ({ addBase }) => addBase({ ":root": { "--color-s_light": "255,255255" } }),
     ({ addBase }) => addBase({ ":root": { "--color-s_blue": "0, 119, 255" } }),
     ({ addBase }) => addBase({ ":root": { "--color-s_green": "0, 168, 107" } }),
     ({ addBase }) => addBase({ ":root": { "--color-s_red": "253, 60, 74" } }),
-    ({ addBase }) =>
-      addBase({ ":root": { "--color-s_violet": "127, 61, 255" } }),
-    ({ addBase }) =>
-      addBase({ ":root": { "--color-s_yellow": "238, 165, 25" } }),
+    ({ addBase }) => addBase({ ":root": { "--color-s_violet": "127, 61, 255" } }),
+    ({ addBase }) => addBase({ ":root": { "--color-s_yellow": "238, 165, 25" } }),
   ],
   safelist: [
     {
