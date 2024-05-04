@@ -30,7 +30,7 @@ export const SpendingBar = ({
   let count = 1;
 
   return (
-    <View className="flex-col" style={{ width: totalBarWidth }}>
+    <View className="flex-col">
       <View className="flex-row">
         <Text className="pl-1 pt-0.5 text-xl font-medium dark:text-s_light-40 pb-0.5">
           {titleString}
@@ -41,7 +41,7 @@ export const SpendingBar = ({
           {formatCurrency(totalSpending)}
         </Text>
       </View>
-      <View className="flex-row">
+      <View className="flex-row" style={{ width: totalBarWidth }}>
         {categoriesSpendingAmount.map((amount, index) => {
           if (amount !== 0) {
             const isLastIndex =

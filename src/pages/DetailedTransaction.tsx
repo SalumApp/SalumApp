@@ -1,21 +1,37 @@
 // @ts-nocheck
+import "react-native-get-random-values";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { useObject } from "@realm/react";
+import { useObject, useRealm } from "@realm/react";
 import * as React from "react";
-import { Image, ScrollView, Text, useColorScheme, View } from "react-native";
+import {
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from "react-native";
 
+import { IconGlyph } from "../assets/Glyph";
 import { TopNav } from "../components/Navigation/TopNav";
+import BottomSheetConfirmation from "../components/Sheet/BottomSheetConfirmation";
 import { Transaction } from "../models/Transaction";
-import { formatCurrency } from "../utils/Misc";
 import { SafeAreaInsetsView } from "../utils/SafeArea";
 import { ThemeColor } from "../utils/Theme";
 
 export const DetailedTransaction = () => {
   const route = useRoute();
   const navigation = useNavigation();
+  const realm = useRealm();
   const { transactionId } = route.params;
   const transaction = useObject(Transaction, transactionId);
   const colorScheme = useColorScheme();
+  const [isDeleteConfirmationVisible, setIsDeleteConfirmationVisible] =
+    React.useState(false);
+
+  if (!transaction) {
+    return <Text>No transactions found</Text>;
+  }
 
   let bg_color: string;
 
@@ -33,6 +49,14 @@ export const DetailedTransaction = () => {
     }
   }
 
+  const handleTransactionDelete = () => {
+    realm.write(() => {
+      setIsDeleteConfirmationVisible(false);
+      realm.delete(transaction);
+      navigation.navigate("transaction");
+    });
+  };
+
   return (
     <SafeAreaInsetsView
       topInsetColor={bg_color}
@@ -43,7 +67,14 @@ export const DetailedTransaction = () => {
         titleColor="#FFFFFF"
         bgColor={bg_color}
         onLeftPress={() => navigation.navigate("transaction")}
-        onRightPress={() => console.log("delete")}
+        right={
+          <TouchableOpacity
+            onPress={() => setIsDeleteConfirmationVisible(true)}
+            className="pr-5"
+          >
+            <IconGlyph glyph="Trash" dim={32} fill="#FFFFFF" />
+          </TouchableOpacity>
+        }
       />
       <View
         style={{ backgroundColor: bg_color }}
@@ -51,14 +82,15 @@ export const DetailedTransaction = () => {
       >
         <View className="flex-row items-center pb-2 mt-10">
           <Text className="text-7xl font-medium text-s_light-80">
-            {formatCurrency(transaction.amount / 100)}
+            {transaction.currency.symbol}
+            {transaction.currency.getAmountString(transaction.amount)}
           </Text>
         </View>
         <Text className="text-2xl font-medium text-s_light-80">
           {transaction.title}
         </Text>
         <Text className="text-xl font-medium text-s_light-80">
-          {new Date(transaction.datetime).toLocaleString()}
+          {transaction.datetime.toLocaleString()}
         </Text>
       </View>
 
@@ -103,20 +135,28 @@ export const DetailedTransaction = () => {
           </View>
         )}
         {transaction.attachments !== null && (
-          <View>
-            <Text className="font-medium text-xl color-s_light-20 ml-8">
+          <View className="">
+            <Text className="font-medium text-xl color-s_light-20 m-5">
               Attachment
             </Text>
             <Image
               source={{
-                uri: `data:image/png;base64,${transaction.attachments}`,
+                uri: transaction.attachments,
               }}
-              style={{ resizeMode: "contain" }}
-              className="w-11/12 self-center"
+              style={{ resizeMode: "contain", width: "90%", height: "80%" }}
+              className="self-center"
             />
           </View>
         )}
       </ScrollView>
+      <BottomSheetConfirmation
+        visible={isDeleteConfirmationVisible}
+        onClose={() => setIsDeleteConfirmationVisible(false)}
+        title="Remove this transaction?"
+        description="Are you sure do you want to remove this transaction?"
+        onPressLeft={() => setIsDeleteConfirmationVisible(false)}
+        onPressRight={handleTransactionDelete}
+      />
     </SafeAreaInsetsView>
   );
 };

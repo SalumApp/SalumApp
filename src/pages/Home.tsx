@@ -154,7 +154,7 @@ export const Home = () => {
       <LinearGradient
         style={{
           width: useWindowDimensions().width,
-          height: useWindowDimensions().height * 1.5,
+          height: useWindowDimensions().height,
         }}
         locations={[0, 0.99]}
         colors={gradientColor}
