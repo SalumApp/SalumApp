@@ -2,6 +2,8 @@ import Realm from "realm";
 
 import { Account } from "./Account";
 import { Category } from "./Category";
+import { Currency } from "./Currency";
+import { Friend } from "./Friend";
 
 export class Transaction extends Realm.Object {
   static schema: Realm.ObjectSchema = {
@@ -11,15 +13,22 @@ export class Transaction extends Realm.Object {
       _id: "uuid",
       title: "string",
       category: "Category",
-      datetime: "int",
+      datetime: "date",
+      isIncludeInCashFlow: "bool",
       isExpense: "bool",
       amount: "int",
-      amountInUSD: "int",
-      currency: "string",
+      amountInBaseCurrency: "int",
+      currency: "Currency",
       account: "Account",
       isRecurring: "bool",
+      isSplit: "bool",
+      friends: {
+        type: "list",
+        objectType: "Friend",
+        optional: false,
+      },
       frequency: "string?",
-      endDate: "int?",
+      endDate: "date?",
       description: "string?",
       attachments: "string?",
     },
@@ -27,15 +36,18 @@ export class Transaction extends Realm.Object {
   _id: Realm.BSON.UUID;
   title!: string;
   category!: Category;
-  datetime!: number;
+  datetime!: Date;
+  isIncludeInCashFlow!: boolean;
   isExpense!: boolean;
   amount!: number;
-  amountInUSD!: number;
-  currency!: string;
+  amountInBaseCurrency!: number;
+  currency!: Currency;
   account!: Account;
+  isSplit!: boolean;
+  friends?: Realm.List<Friend>;
   isRecurring!: boolean;
   frequency?: string;
-  endDate?: number;
+  endDate?: Date;
   description?: string;
   attachments?: string;
 }
