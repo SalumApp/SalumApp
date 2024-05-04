@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+    <title>credit-card-2</title>
+    <g id="credit-card-2">
+        <g id="Credit_Card" data-name="Credit Card">
+            <path d="M30,11v1H2V11A5,5,0,0,1,7,6H25A5,5,0,0,1,30,11Z"/>
+            <path d="M2,14v7a5,5,0,0,0,5,5H25a5,5,0,0,0,5-5V14Zm23,9H21a1,1,0,0,1,0-2h4a1,1,0,0,1,0,2Z"/>
+        </g>
+    </g>
+</svg>

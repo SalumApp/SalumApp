@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+    <title>wallet</title>
+    <g id="wallet">
+        <g id="Wallet-2-2" data-name="Wallet">
+            <path d="M21,24h4.59A5,5,0,0,1,21,27H7a5,5,0,0,1-5-5V10A5,5,0,0,1,7,5H21a5,5,0,0,1,4.59,3H21a5,5,0,0,0-5,5v6A5,5,0,0,0,21,24Z"/>
+            <rect x="18" y="10" width="12" height="12" rx="3"/>
+        </g>
+    </g>
+</svg>

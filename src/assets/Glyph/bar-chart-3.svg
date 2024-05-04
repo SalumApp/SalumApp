@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+    <title>bar-chart-3</title>
+    <g id="bar-chart-3">
+        <g id="Bar_Chart">
+            <rect x="12" y="12" width="8" height="16" rx="3"/>
+            <rect x="22" y="6" width="8" height="22" rx="3"/>
+            <rect x="2" y="6" width="8" height="22" rx="3"/>
+        </g>
+    </g>
+</svg>

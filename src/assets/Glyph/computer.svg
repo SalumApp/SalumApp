@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+    <title>computer</title>
+    <g id="computer">
+        <path d="M25,4H7A3,3,0,0,0,4,7v8.94H28V7A3,3,0,0,0,25,4Z"/>
+        <path d="M4,19a3,3,0,0,0,3,3h5v4H11a1,1,0,0,0,0,2H21a1,1,0,0,0,0-2H20V22h5a3,3,0,0,0,3-3V18H4Z"/>
+    </g>
+</svg>
