@@ -3,6 +3,11 @@
     "preview": {
       "android": {
         "gradleCommand": ":app:assembleRelease"
+      },
+      "ios": {
+        "developmentClient": true,
+        "distribution": "internal",
+        "simulator": true
       }
     },
     "development": {
