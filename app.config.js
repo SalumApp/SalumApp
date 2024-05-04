@@ -1,7 +1,7 @@
 module.exports = {
   name: "Salum",
   slug: "salumapp",
-  version: "0.0.0",
+  version: "0.1.0",
   orientation: "portrait",
   icon: "./src/assets/icons/icon.png",
   userInterfaceStyle: "automatic",
