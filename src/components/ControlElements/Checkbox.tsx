@@ -1,7 +1,7 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
 
-import { IconGlyph } from "../../assets/Glyph/IconGlyph";
+import { IconGlyph } from "../../assets/Glyph";
 
 interface CheckboxProps {
   isChecked: boolean;

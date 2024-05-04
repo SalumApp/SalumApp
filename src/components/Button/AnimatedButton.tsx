@@ -8,7 +8,7 @@ import {
   ViewStyle,
 } from "react-native";
 
-import { IconGlyph } from "../../assets/Glyph/IconGlyph";
+import { IconGlyph } from "../../assets/Glyph";
 
 interface NavProps {
   routeName: string;

@@ -6,7 +6,7 @@ import { ScrollView, Text, View } from "react-native";
 import { MyButton } from "../components/Button/Button";
 import BudgetCard from "../components/Card/BudgetCard";
 import { Category } from "../models/Category";
-import { Transaction } from "../models/Transaction";
+import { getCurrentMonth } from "../utils/Misc";
 import { SafeAreaInsetsView } from "../utils/SafeArea";
 
 export const BudgetScreen = () => {
@@ -20,8 +20,20 @@ export const BudgetScreen = () => {
     );
   });
 
+  const currentDate = new Date();
+
   return (
     <SafeAreaInsetsView className="flex-1 bg-s_blue-100 dark:bg-s_blue-dark">
+      <View className="mb-4 mt-12 items-center">
+        <Text className="text-s_light-100 dark:text-s_light-100 font-medium text-6xl">
+          {getCurrentMonth()}
+        </Text>
+      </View>
+      <View className="mb-4 items-center">
+        <Text className="text-s_light-100 dark:text-s_light-20 font-medium text-3xl">
+          {currentDate.getFullYear()}
+        </Text>
+      </View>
       <View className="h-4/5 bg-s_light-60 dark:bg-s_dark-100 absolute w-full bottom-0 rounded-t-3xl">
         {categories.length === 0 && (
           <View className="flex-1 items-center justify-center">
@@ -35,20 +47,10 @@ export const BudgetScreen = () => {
             <View className="pt-2" />
             <View>
               {categories.map((category) => {
-                let usedAmount = 0;
-                category
-                  .linkingObjects<Transaction>("Transaction", "category")
-                  .forEach((trans) => {
-                    usedAmount += trans.amount;
-                  });
                 return (
                   <BudgetCard
-                    key={category.title}
-                    totalAmount={category.budget / 100}
-                    usedAmount={usedAmount / 100}
-                    categoryTitle={category.title}
-                    categoryColor={category.color}
-                    currency="USD"
+                    key={category._id.toString()}
+                    category={category}
                   />
                 );
               })}

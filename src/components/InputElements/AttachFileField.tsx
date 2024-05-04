@@ -3,7 +3,7 @@ import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
 import { Image, Platform, Text, TouchableOpacity, View } from "react-native";
 
-import { IconGlyph } from "../../assets/Glyph/IconGlyph";
+import { IconGlyph } from "../../assets/Glyph";
 import BottomSheetAttach from "../Sheet/BottomSheetAttach";
 
 interface AttachFileFieldProp {
@@ -32,14 +32,15 @@ const AttachFileField = ({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4, 3],
-        quality: 1,
         exif: false,
         base64: true,
       });
 
       if (!result.canceled) {
         setImage(result.assets[0].uri);
-        onAttachChange(result.assets[0].base64);
+        onAttachChange(
+          `data:${result.assets[0].mimeType};base64,${result.assets[0].base64}`,
+        );
       }
     }
   };
@@ -48,16 +49,15 @@ const AttachFileField = ({
     setIsBottomSheetVisible(false);
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
       exif: false,
       base64: true,
     });
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
-      onAttachChange(result.assets[0].base64);
+      onAttachChange(
+        `data:${result.assets[0].mimeType};base64,${result.assets[0].base64}`,
+      );
     }
   };
 
@@ -74,7 +74,7 @@ const AttachFileField = ({
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64data = reader.result as string;
-        onAttachChange(base64data);
+        onAttachChange(`data:application/pdf;base64,${base64data}`);
       };
       reader.readAsDataURL(blob);
     }

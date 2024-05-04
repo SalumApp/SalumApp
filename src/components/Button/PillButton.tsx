@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-import { IconGlyph } from "../../assets/Glyph/IconGlyph";
+import { IconGlyph } from "../../assets/Glyph";
 
 interface PillButtonProps {
   onPress: () => void;
@@ -19,7 +19,7 @@ export const PillButton = ({ onPress, text, glyph }: PillButtonProps) => {
         {typeof glyph !== "undefined" && (
           <IconGlyph glyph="Arrow-down-2" dim={25} fill="#91919F" />
         )}
-        <Text className="pl-4 pr-4 text-center text-black text-2xl font-medium">
+        <Text className="pl-4 pr-4 text-center text-s_dark-100 dark:text-s_light-80 text-2xl font-medium">
           {text}
         </Text>
       </View>
