@@ -3,16 +3,20 @@ import React from "react";
 import { TouchableOpacity, View, useColorScheme } from "react-native";
 import { CurvedBottomBarExpo } from "react-native-curved-bottom-bar";
 
-import { IconGlyph } from "./src/assets/Glyph/IconGlyph";
+import {
+  NetWealthStackNavigator,
+  SettingsStackNavigator,
+} from "./StackNavigators";
+import { IconGlyph } from "./src/assets/Glyph";
 import { AnimatedButton } from "./src/components/Button/AnimatedButton";
 import { BudgetScreen } from "./src/pages/BudgetScreen";
-import CategoryScreen from "./src/pages/CategoryScreen";
+import { DetailedFriend } from "./src/pages/DetailedFriend";
 import { DetailedTransaction } from "./src/pages/DetailedTransaction";
+import FriendScreen from "./src/pages/FriendScreen";
 import { Home } from "./src/pages/Home";
 import { NewBudgetScreen } from "./src/pages/NewBudgetScreen";
 import { NewTransaction } from "./src/pages/NewTransaction";
 import { NewTransfer } from "./src/pages/NewTransfer";
-import { SettingsScreen } from "./src/pages/SettingsScreen";
 import { TransactionScreen } from "./src/pages/TransactionScreen";
 import { ThemeColor } from "./src/utils/Theme";
 
@@ -71,7 +75,7 @@ const BottomTabNavigator = ({ tabRef }: BottomTabProps) => {
     return <BudgetScreen />;
   };
 
-  const Settings: React.FC = () => {
+  const Split: React.FC = () => {
     useFocusEffect(
       React.useCallback(() => {
         // Function to be called when screen is focused
@@ -82,7 +86,35 @@ const BottomTabNavigator = ({ tabRef }: BottomTabProps) => {
       }, []),
     );
 
-    return <SettingsScreen />;
+    return <FriendScreen />;
+  };
+
+  const SplitDetail: React.FC = () => {
+    useFocusEffect(
+      React.useCallback(() => {
+        // Function to be called when screen is focused
+        tabRef.current?.setVisible(false);
+        return () => {
+          // Optional cleanup if needed when screen loses focus
+        };
+      }, []),
+    );
+
+    return <DetailedFriend />;
+  };
+
+  const Settings: React.FC = () => {
+    useFocusEffect(
+      React.useCallback(() => {
+        // Function to be called when screen is focused
+        tabRef.current?.setVisible(false);
+        return () => {
+          // Optional cleanup if needed when screen loses focus
+        };
+      }, []),
+    );
+
+    return <SettingsStackNavigator />;
   };
 
   const NewBudget: React.FC = () => {
@@ -155,7 +187,7 @@ const BottomTabNavigator = ({ tabRef }: BottomTabProps) => {
     return <DetailedTransaction />;
   };
 
-  const ManageCategoryScreen: React.FC = () => {
+  const NetWealthStackScreen: React.FC = () => {
     useFocusEffect(
       React.useCallback(() => {
         // Function to be called when screen is focused
@@ -166,7 +198,7 @@ const BottomTabNavigator = ({ tabRef }: BottomTabProps) => {
       }, []),
     );
 
-    return <CategoryScreen />;
+    return <NetWealthStackNavigator />;
   };
 
   const _renderIcon = (routeName: string, selectedTab: string) => {
@@ -185,8 +217,8 @@ const BottomTabNavigator = ({ tabRef }: BottomTabProps) => {
         IconComponent = "Pie-chart";
         iconStyle = { paddingLeft: 40 }; // Add padding to the left
         break;
-      case "settings":
-        IconComponent = "Settings";
+      case "split":
+        IconComponent = "Meeting";
         break;
     }
 
@@ -254,9 +286,14 @@ const BottomTabNavigator = ({ tabRef }: BottomTabProps) => {
         position="RIGHT"
       />
       <CurvedBottomBarExpo.Screen
+        name="split"
+        component={() => <Split />}
+        position="RIGHT"
+      />
+      <CurvedBottomBarExpo.Screen
         name="settings"
         component={() => <Settings />}
-        position="RIGHT"
+        position="CIRCLE"
       />
       <CurvedBottomBarExpo.Screen
         name="expense"
@@ -284,9 +321,14 @@ const BottomTabNavigator = ({ tabRef }: BottomTabProps) => {
         component={() => <TransactionDetailScreen />}
       />
       <CurvedBottomBarExpo.Screen
-        name="manage category"
+        name="net wealth stack"
         position="CIRCLE"
-        component={() => <ManageCategoryScreen />}
+        component={() => <NetWealthStackScreen />}
+      />
+      <CurvedBottomBarExpo.Screen
+        name="friend detail"
+        position="CIRCLE"
+        component={() => <SplitDetail />}
       />
     </CurvedBottomBarExpo.Navigator>
   );
