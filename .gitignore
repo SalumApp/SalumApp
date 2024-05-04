@@ -3,6 +3,9 @@
 *.app
 android/
 ios/
+.env*
+google-services.json
+GoogleService-Info.plist
 # Expo
 .expo/
 .expo/web/cache
@@ -77,3 +80,5 @@ yarn-error.log
 
 # testing
 /coverage
+
+./src/libs/test.ts

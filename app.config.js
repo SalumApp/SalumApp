@@ -1,5 +1,5 @@
 module.exports = {
-  name: "SalumApp",
+  name: "Salum",
   slug: "salumapp",
   version: "0.0.0",
   orientation: "portrait",
@@ -8,23 +8,32 @@ module.exports = {
   splash: {
     image: "./src/assets/icons/splash.png",
     resizeMode: "contain",
-    backgroundColor: "#ffffff",
+    backgroundColor: "#fff6e5",
+    dark: {
+      image: "./src/assets/icons/splash.png",
+      resizeMode: "contain",
+      backgroundColor: "#000115",
+    }
   },
   assetBundlePatterns: ["**/*"],
+  android: {
+    googleServicesFile: process.env.GOOGLE_SERVICES_JSON
+  },
   ios: {
     supportsTablet: true,
     usesIcloudStorage: true,
     bundleIdentifier: "com.salumapp.salumapp",
+    infoPlist: {
+      NSFaceIDUsageDescription: "This app uses Face ID and Touch ID to verify user's identity and protect sensitive user data"
+    },
+    googleServicesFile: process.env.GOOGLE_SERVICES_PLIST
   },
   android: {
     adaptiveIcon: {
       foregroundImage: "./src/assets/icons/adaptive-icon.png",
-      backgroundColor: "#ffffff",
+      backgroundColor: "#000115",
     },
     package: "com.salumapp.salumapp",
-  },
-  web: {
-    favicon: "./src/assets/icons/favicon.png",
   },
   plugins: [
     [
@@ -38,6 +47,19 @@ module.exports = {
       },
     ],
     ["expo-document-picker"],
+    [
+      "expo-local-authentication",
+      {
+        faceIDPermission: "Allow $(PRODUCT_NAME) to use Face ID."
+      }
+    ],
+    [
+      "expo-secure-store",
+      {
+        faceIDPermission: "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
+      }
+    ],
+    ["@react-native-google-signin/google-signin"],
   ],
   extra: {
     storybookEnabled: process.env.STORYBOOK_ENABLED,
@@ -46,4 +68,8 @@ module.exports = {
     },
   },
   owner: "salumapp",
+  scheme: "salum",
+  androidStatusBar: {
+    translucent: true
+  },
 };
