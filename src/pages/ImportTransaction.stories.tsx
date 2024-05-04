@@ -1,14 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 
-import { NetWealthScreen } from "./NetWealthScreen";
+import { ImportTransaction } from "./ImportTransaction";
 
 const meta = {
-  title: "Page/NetWealthScreen",
-  component: NetWealthScreen,
-  args: {},
+  title: "Page/ImportTransaction",
+  component: ImportTransaction,
   decorators: [(Story) => <Story />],
-} satisfies Meta<typeof NetWealthScreen>;
+  args: {
+    csvColumnTitles: ["a", "b", "c"],
+  },
+} satisfies Meta<typeof ImportTransaction>;
 
 export default meta;
 
