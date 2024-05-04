@@ -35,7 +35,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
           />
           <IconGlyph glyph="User" dim={52} fill={friendIconColor} />
         </View>
-        <View className="flex-1 pl-4">
+        <View className="flex-1 pl-4 flex-row justify-between">
           <Text
             className="text-xl font-medium dark:text-s_light-80"
             numberOfLines={3}
@@ -43,21 +43,23 @@ const FriendCard: React.FC<FriendCardProps> = ({
           >
             {friendName}
           </Text>
-          <View className="flex-col justify-between items-left mb-1">
-            <View className="flex-row justify-between">
-              {netFriendBalance && (
-                <Text
-                  className={`${balanceColor} text-xl font-medium mb-1 mt-1 mr-4`}
-                >
-                  {baseCurrency.symbol}
-                  {baseCurrency.getAmountString(
-                    Math.abs(netFriendBalance),
-                    undefined,
-                    false,
-                  )}
-                </Text>
-              )}
-            </View>
+          <View>
+            {netFriendBalance !== 0 ? (
+              <Text
+                className={`${balanceColor} text-xl font-medium mb-1 mt-1 mr-4`}
+              >
+                {baseCurrency.symbol}
+                {baseCurrency.getAmountString(
+                  Math.abs(netFriendBalance),
+                  undefined,
+                  false,
+                )}
+              </Text>
+            ) : (
+              <Text className="text-s_light-20 text-xl font-medium mb-1 mt-1 mr-4">
+                --
+              </Text>
+            )}
           </View>
         </View>
       </View>

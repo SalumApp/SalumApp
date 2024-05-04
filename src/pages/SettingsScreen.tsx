@@ -59,7 +59,7 @@ export const SettingsScreen = () => {
   };
 
   return (
-    <SafeAreaInsetsView className="flex-col bg-s_light-40 dark:bg-s_dark_navy-100">
+    <SafeAreaInsetsView className="bg-s_light-40 dark:bg-s_dark_navy-100">
       <TopNav
         title="Options"
         titleColor={colorScheme === "dark" ? "#FFFFFF" : "#000000"}
@@ -67,7 +67,7 @@ export const SettingsScreen = () => {
         onRightPress={() => navigation.navigate("acknowledgements")}
       />
 
-      <ScrollView>
+      <ScrollView className="h-full">
         <View className="h-10" />
         <View className="mx-12 mt-4 bg-s_light-100 border border-s_light-20 rounded-3xl dark:bg-s_dark_navy-75">
           <TouchableOpacity
@@ -137,7 +137,6 @@ export const SettingsScreen = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        <View className="h-20" />
       </ScrollView>
     </SafeAreaInsetsView>
   );
