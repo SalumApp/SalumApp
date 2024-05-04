@@ -1,216 +1,170 @@
 import "react-native-gesture-handler";
 import "react-native-get-random-values";
-import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NavigationContainer } from "@react-navigation/native";
 import { RealmProvider } from "@realm/react";
 import Constants from "expo-constants";
-import React, { useEffect, useRef } from "react";
+import * as LocalAuthentication from "expo-local-authentication";
+import * as SecureStore from "expo-secure-store";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useContext,
+  createContext,
+} from "react";
 import "./global.css";
 import { LogBox } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import Realm from "realm";
 
 import BottomTabNavigator from "./BottomTabNavigator";
+import { OnBoardingStackNavigator } from "./StackNavigators";
 import { schemas } from "./src/models";
-import { Account } from "./src/models/Account";
-import { Category } from "./src/models/Category";
-import { Transaction } from "./src/models/Transaction";
+import PinInput from "./src/pages/PinInputPage";
+import { base64ToBytes } from "./src/utils/Misc";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
+  "Require cycle",
+  "Realm",
+  "realm",
 ]);
 
-// import { vars, useColorScheme } from "nativewind";
+export interface OnBoardingContextType {
+  isFirstLaunch: boolean;
+  completeOnboarding: () => void;
+  setRealmKey: React.Dispatch<any>;
+}
 
-// const themes = {
-//   blue: {
-//     light: vars({
-//       "--color-primary": "black",
-//       "--color-secondary": "white",
-//     }),
-//     dark: vars({
-//       "--color-primary": "white",
-//       "--color-secondary": "dark",
-//     }),
-//   },
-//   violet: {
-//     light: vars({
-//       "--color-primary": "black",
-//       "--color-secondary": "white",
-//     }),
-//     dark: vars({
-//       "--color-primary": "white",
-//       "--color-secondary": "dark",
-//     }),
-//   },
-//   tritanopia: {
-//     light: vars({
-//       "--color-primary": "red",
-//       "--color-secondary": "green",
-//     }),
-//     dark: vars({
-//       "--color-primary": "green",
-//       "--color-secondary": "red",
-//     }),
-//   },
-//   protanopiaDeuteranopia: {
-//     light: vars({
-//       "--color-primary": "red",
-//       "--color-secondary": "green",
-//     }),
-//     dark: vars({
-//       "--color-primary": "green",
-//       "--color-secondary": "red",
-//     }),
-//   },
-// };
-//
-// 'Interface ThemeProps {
-//   name: string;
-//   children: React.ReactNode;
-// }
-//
-// function Theme({ name, children }: ThemeProps) {
-//   const { colorScheme } = useColorScheme();
-//   return (
-//     <View style={themes[name as keyof typeof themes][colorScheme]}>
-//       {children}
-//     </View>
-//   );
-// }
-const initializeDataIfNeeded = async () => {
-  const realm = await Realm.open({
-    schema: [Account, Category, Transaction],
-  });
-
-  const dataEntries = realm.objects("Category");
-
-  if (dataEntries.length === 0) {
-    realm.write(() => {
-      realm.create("Category", {
-        title: "Uncategorized",
-        color: "rgb(253 60 74)",
-        glyph: "More",
-        hasBudget: false,
-      });
-      realm.create("Category", {
-        title: "Grocery",
-        isExpense: true,
-        color: "rgb(238 165 25)",
-        glyph: "Cart",
-        hasBudget: false,
-      });
-      realm.create("Category", {
-        title: "Dining",
-        isExpense: true,
-        color: "rgb(0 168 107)",
-        glyph: "Restaurant",
-        hasBudget: false,
-      });
-      realm.create("Category", {
-        title: "Bills & Utilities",
-        isExpense: true,
-        color: "rgb(127 61 255)",
-        glyph: "Recurring_bill",
-        hasBudget: false,
-      });
-      realm.create("Category", {
-        title: "Transport",
-        isExpense: true,
-        color: "rgb(0 119 255)",
-        glyph: "Car",
-        hasBudget: false,
-      });
-      realm.create("Category", {
-        title: "Travel",
-        isExpense: true,
-        color: "rgb(22, 23, 25)",
-        glyph: "Airplane",
-        hasBudget: false,
-      });
-      realm.create("Category", {
-        title: "Shopping",
-        isExpense: true,
-        color: "rgb(0, 121, 178)",
-        glyph: "Shopping_bag",
-        hasBudget: false,
-      });
-      realm.create("Category", {
-        title: "Wages",
-        isExpense: false,
-        color: "rgb(0 119 255)",
-        glyph: "Salary",
-        hasBudget: false,
-      });
-      realm.create("Category", {
-        title: "Passive",
-        isExpense: false,
-        color: "rgb(238 165 25)",
-        glyph: "Piggy-bank",
-        hasBudget: false,
-      });
-      realm.create("Category", {
-        title: "Investment",
-        isExpense: false,
-        color: "rgb(0 168 107)",
-        glyph: "Presentation-3",
-        hasBudget: false,
-      });
-    });
-  }
-
-  const testingAccount = realm.objects("Account");
-  if (testingAccount.length === 0) {
-    realm.write(() => {
-      realm.create("Account", {
-        _id: new Realm.BSON.UUID(),
-        title: "Chase Checking",
-        type: "Checking",
-        currency: "USD",
-        balance: 0,
-      });
-      realm.create("Account", {
-        _id: new Realm.BSON.UUID(),
-        title: "Chase Saving",
-        type: "Saving",
-        currency: "USD",
-        balance: 0,
-      });
-      realm.create("Account", {
-        _id: new Realm.BSON.UUID(),
-        title: "Bank of America Checking",
-        type: "Checking",
-        currency: "USD",
-        balance: 0,
-      });
-    });
-  }
-  realm.close();
+const defaultContextValue: OnBoardingContextType = {
+  isFirstLaunch: false,
+  completeOnboarding: () => {}, // empty function as a placeholder
+  setRealmKey: () => {},
 };
 
+const OnBoardingContext =
+  createContext<OnBoardingContextType>(defaultContextValue);
+
+export const useOnBoardingContext = () => useContext(OnBoardingContext);
+
+async function checkFirstLaunch() {
+  try {
+    const hasFirstLaunched = await AsyncStorage.getItem("salum.user.onboarded");
+    return hasFirstLaunched === null;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+}
+
 function App() {
+  const tabBarRef = useRef(null);
+  const [isFirstLaunch, setIsFirstLaunch] = useState(false);
+  const [isFirstLaunchLoading, setIsFirstLaunchLoading] = useState(true);
+  const [isBioAuthSupported, setIsBioAuthSupported] = useState(false);
+  const [isBioAuthEnrolled, setIsBioAuthEnrolled] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [realmKey, setRealmKey] = useState(null);
+
+  const completeOnboarding = () => {
+    setIsFirstLaunch(false);
+    setIsAuthenticated(true);
+  };
+
+  const fetchSecureItem = async () => {
+    try {
+      const result = await SecureStore.getItemAsync("salum.databaseKey");
+      setRealmKey(base64ToBytes(result));
+    } catch (error) {
+      console.error("Failed to load the secure item", error);
+    }
+  };
+
   useEffect(() => {
-    initializeDataIfNeeded().catch((error) => {
-      console.error(error);
-    });
+    let isMounted = true;
+
+    const fetchFirstLaunch = async () => {
+      try {
+        const firstLaunch = await checkFirstLaunch();
+        if (isMounted) {
+          setIsFirstLaunch(firstLaunch);
+          console.log("isFirstLaunch", isFirstLaunch);
+          setIsFirstLaunchLoading(false);
+        }
+      } catch (error) {
+        console.error("Failed to check first launch:", error);
+      }
+    };
+    fetchFirstLaunch();
+    return () => {
+      isMounted = false;
+    };
+  });
+
+  useEffect(() => {
+    fetchSecureItem();
   }, []);
 
-  const tabBarRef = useRef(null);
+  useEffect(() => {
+    const getBioAuthSupport = async () => {
+      const result = await LocalAuthentication.hasHardwareAsync();
+      setIsBioAuthSupported(result);
+      console.log("isBioAuthSupported", result);
+    };
+    getBioAuthSupport();
+  });
 
-  const navTheme = {
-    ...DefaultTheme,
-    colors: {
-      ...DefaultTheme.colors,
-      background: "white",
-    },
-  };
+  useEffect(() => {
+    const getBioAuthEnroll = async () => {
+      const result = await LocalAuthentication.isEnrolledAsync();
+      setIsBioAuthEnrolled(result);
+      console.log("isBioAuthEnrolled", result);
+    };
+    if (isBioAuthSupported) {
+      getBioAuthEnroll();
+    }
+  }, [isBioAuthSupported]);
+
+  useEffect(() => {
+    const getAuthentication = async () => {
+      const result = await LocalAuthentication.authenticateAsync();
+      setIsAuthenticated(result.success);
+      console.log("Authentication result", result);
+    };
+    if (!isFirstLaunch && isBioAuthSupported && isBioAuthEnrolled) {
+      getAuthentication();
+    }
+  }, [isBioAuthEnrolled]);
+
+  // const onAuthenticate = () => {
+  //   LocalAuthentication.authenticateAsync().then((result) => {
+  //     setIsAuthenticated(result.success);
+  //     console.log(result);
+  //   });
+  // }
+
+  if (isFirstLaunchLoading) {
+    // return <LoadingScreen />; // Show a loading screen while checking if it's the first launch
+    return null;
+  }
 
   return (
     <SafeAreaProvider>
-      <RealmProvider schema={schemas}>
-        <NavigationContainer theme={navTheme}>
-          <BottomTabNavigator tabRef={tabBarRef} />
-        </NavigationContainer>
-      </RealmProvider>
+      <NavigationContainer>
+        <OnBoardingContext.Provider
+          value={{ isFirstLaunch, completeOnboarding, setRealmKey }}
+        >
+          {isFirstLaunch ? (
+            <OnBoardingStackNavigator />
+          ) : isAuthenticated && realmKey ? (
+            <RealmProvider schema={schemas} encryptionKey={realmKey}>
+              <BottomTabNavigator tabRef={tabBarRef} />
+            </RealmProvider>
+          ) : (
+            <PinInput setAuthentication={() => setIsAuthenticated(true)} />
+          )}
+        </OnBoardingContext.Provider>
+      </NavigationContainer>
     </SafeAreaProvider>
   );
 }
