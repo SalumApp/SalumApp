@@ -1,9 +1,12 @@
+import { useObject } from "@realm/react";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-import { IconGlyph } from "../../assets/Glyph/IconGlyph";
+import { IconGlyph } from "../../assets/Glyph";
+import { Currency } from "../../models/Currency";
 import { Transaction } from "../../models/Transaction";
-import { addAlpha, formatCurrency, formatTime } from "../../utils/Misc";
+import { mainCurrency } from "../../utils/Config";
+import { addAlpha } from "../../utils/Misc";
 
 interface TransactionCardProps {
   transaction: Transaction;
@@ -14,6 +17,8 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
   transaction,
   onPress,
 }) => {
+  const baseCurrency = useObject(Currency, mainCurrency);
+
   return (
     <TouchableOpacity
       className="m-4 mt-3 mb-0 pl-5 rounded-3xl bg-s_light-80 dark:bg-s_dark_navy-75"
@@ -39,16 +44,24 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
           </Text>
         </View>
         <View className="pt-1.5 flex-col ml-auto pr-6">
-          <Text
-            className={`text-xl font-medium ml-auto ${transaction.isExpense ? "text-s_red" : "text-s_green"}`}
-          >
-            {transaction.isExpense ? "" : "+"}
-            {formatCurrency(
-              (transaction.amount / 100) * (transaction.isExpense ? -1 : 1),
+          <View className="flex-row items-center">
+            {transaction.currency.code !== baseCurrency.code && (
+              <Text className="color-gray-500">
+                {transaction.currency.symbol}
+                {transaction.currency.getAmountString(transaction.amount)}
+                {" ≈ "}
+              </Text>
             )}
-          </Text>
+            <Text
+              className={`text-xl font-medium text-right ${transaction.isExpense ? "text-s_red" : "text-s_green"}`}
+            >
+              {transaction.isExpense ? "-" : "+"}
+              {baseCurrency.symbol}
+              {baseCurrency.getAmountString(transaction.amountInBaseCurrency)}
+            </Text>
+          </View>
           <Text className="pt-5 color-gray-500 ml-auto">
-            {formatTime(transaction.datetime)}
+            {transaction.datetime.toLocaleTimeString()}
           </Text>
         </View>
       </View>

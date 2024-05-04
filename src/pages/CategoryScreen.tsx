@@ -2,10 +2,16 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import "react-native-get-random-values";
 import { useQuery } from "@realm/react";
 import * as React from "react";
-import { ScrollView, Text, useColorScheme, View } from "react-native";
-import { Results } from "realm";
+import {
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from "react-native";
+import Realm from "realm";
 
-import { MyButton } from "../components/Button/Button";
+import { IconGlyph } from "../assets/Glyph";
 import CategoryCard from "../components/Card/CategoryCard";
 import { TopNav } from "../components/Navigation/TopNav";
 import { Category } from "../models/Category";
@@ -15,7 +21,7 @@ import { ThemeColor } from "../utils/Theme";
 
 interface CategorySegmentProps {
   segmentTitle: string;
-  categoryList: Results<Category>;
+  categoryList: Realm.Results<Category>;
   backgroundColor: string;
 }
 
@@ -35,7 +41,11 @@ const CategorySegment: React.FC<CategorySegmentProps> = ({
           <CategoryCard
             key={category.title}
             category={category}
-            onPress={() => console.log("clicked")}
+            onPress={() =>
+              navigation.navigate("category detail", {
+                categoryId: category._id,
+              })
+            }
           />
         );
       })}
@@ -48,21 +58,48 @@ export const CategoryScreen = () => {
   const navigation = useNavigation<NavigationProp<any>>();
 
   const expenseCategories = useQuery(Category, (collection) => {
-    return collection.filtered("isExpense != $0", false);
+    return collection.filtered(
+      "title != $0 && isExpense == $1",
+      "Uncategorized",
+      true,
+    );
   });
   const incomeCategories = useQuery(Category, (collection) => {
-    return collection.filtered("isExpense != $0", true);
+    return collection.filtered(
+      "title != $0 && isExpense == $1",
+      "Uncategorized",
+      false,
+    );
   });
+
+  const titleColor = colorScheme === "dark" ? "#FFFFFF" : "#000000";
 
   return (
     <SafeAreaInsetsView className="absolute w-full h-full bg-s_light-60 dark:bg-s_dark_navy-100">
       <TopNav
         title="Categories"
-        titleColor={colorScheme === "dark" ? "#FFFFFF" : "#000000"}
-        onLeftPress={() => navigation.navigate("settings")}
-        onRightPress={() => console.log("Right")}
+        titleColor={titleColor}
+        left={
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            className="pl-5"
+          >
+            <IconGlyph glyph="Arrow-left" dim={32} fill={titleColor} />
+          </TouchableOpacity>
+        }
+        right={
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("category detail", {
+                categoryId: new Realm.BSON.UUID(),
+              })
+            }
+            className="pl-1 pr-5"
+          >
+            <IconGlyph glyph="Plus" dim={24} fill={titleColor} />
+          </TouchableOpacity>
+        }
       />
-
       <ScrollView className="flex-1 mt-3">
         <CategorySegment
           segmentTitle="Expense"
@@ -75,14 +112,6 @@ export const CategoryScreen = () => {
           backgroundColor={addAlpha(ThemeColor.s_green["100"], 0.03)}
         />
       </ScrollView>
-      <View className="h-20 rounded-3xl">
-        <MyButton
-          onPress={() => console.log("Clicked")}
-          text="Add a Category"
-        />
-      </View>
     </SafeAreaInsetsView>
   );
 };
-
-export default CategoryScreen;

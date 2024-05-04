@@ -1,17 +1,6 @@
-import moment from "moment/moment";
-
-export const formatCentsToDollars = (cents: number): string => {
-  const dollars = Math.floor(cents / 100);
-  const remainingCents = cents % 100;
-  return `${dollars.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}.${remainingCents.toString().padStart(2, "0")}`;
-};
-
-export const formatCurrency = (value: number, currencyUsed: string = "USD") => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: currencyUsed,
-  }).format(value);
-};
+import { decode, encode } from "base-64";
+import { parse, formatISO } from "date-fns";
+import * as FileSystem from "expo-file-system";
 
 export const getCurrentMonth = () => {
   const monthNames = [
@@ -43,12 +32,6 @@ export const getRemainingDaysInMonth = () => {
   return lastDayOfMonth.getDate() - currentDate.getDate();
 };
 
-export const formatTime = (epochTime: number) => {
-  const date = new Date(epochTime);
-  moment.locale("en");
-  return moment(date).format("LT");
-};
-
 export const addAlpha = (rgb: string, alpha: number): string => {
   // Remove the "rgb" prefix and parentheses, then split into components.
   const rgbValues = rgb.match(/\d+/g);
@@ -59,3 +42,79 @@ export const addAlpha = (rgb: string, alpha: number): string => {
   // Reconstruct as an RGBA string with the specified alpha value.
   return `rgba(${rgbValues.join(", ")}, ${alpha})`;
 };
+
+const convertToCSV = (data: any[]): string => {
+  const headers = Object.keys(data[0]);
+  const csv = data.map((row) => {
+    return headers
+      .map((fieldName) => {
+        const value = row[fieldName];
+        if (value && typeof value === "object") {
+          // Check if the object has a toString method that returns a UUID or similar
+          if (
+            typeof value.toString === "function" &&
+            value.toString() !== "[object Object]"
+          ) {
+            return `"${value.toString()}"`;
+          }
+          // Otherwise, convert the object to a JSON string
+          return `"${JSON.stringify(value).replace(/"/g, '""')}"`;
+        }
+        return `"${value}"`;
+      })
+      .join(",");
+  });
+  csv.unshift(headers.join(","));
+  return csv.join("\r\n");
+};
+
+export const saveDataAsCSV = async (
+  data: any[],
+  filename: string,
+): Promise<string> => {
+  const csvData = convertToCSV(data);
+  console.log(csvData);
+  const fileUri = `${FileSystem.documentDirectory}${filename}`;
+  //await FileSystem.writeAsStringAsync(fileUri, csvData, { encoding: FileSystem.EncodingType.UTF8 });
+  return fileUri;
+};
+
+export const convertToDateISO = (inputDate: string): string => {
+  const formats = [
+    "yyyy-MM-dd", // ISO date
+    "MM/dd/yyyy", // American date
+    "yyyy-MM-dd'T'HH:mm:ss", // ISO datetime
+    "MM/dd/yyyy HH:mm:ss", // American datetime with space
+    "MM/dd/yyyy'T'HH:mm:ss", // American datetime with T separator
+    "yyyy-MM-dd'T'HH:mm:ss.SSSX", // ISO datetime with milliseconds and time zone
+  ];
+
+  for (const format of formats) {
+    const parsedDate = parse(inputDate, format, new Date());
+    if (!isNaN(parsedDate.getTime())) {
+      return formatISO(parsedDate);
+    }
+  }
+  return "Invalid date";
+};
+
+export function base64ToBytes(base64: string): Uint8Array {
+  const binaryString = decode(base64);
+  const length = binaryString.length;
+  const bytes = new Uint8Array(new ArrayBuffer(length));
+
+  for (let i = 0; i < length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+
+  return bytes;
+}
+
+export function bytesToBase64(inputBytes: Uint8Array): string {
+  let binaryString = "";
+  for (let i = 0; i < inputBytes.length; i++) {
+    binaryString += String.fromCharCode(inputBytes[i]);
+  }
+
+  return encode(binaryString);
+}

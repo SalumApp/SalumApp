@@ -1,54 +1,73 @@
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { useQuery } from "@realm/react";
+import {
+  NavigationProp,
+  useFocusEffect,
+  useNavigation,
+} from "@react-navigation/native";
+import { useObject, useQuery } from "@realm/react";
 import { LinearGradient } from "expo-linear-gradient";
 import * as React from "react";
 import {
   ScrollView,
+  Text,
   TouchableOpacity,
   useColorScheme,
   useWindowDimensions,
   View,
-  Text,
 } from "react-native";
-import { Results } from "realm";
+import Realm from "realm";
 
-import { IconGlyph } from "../assets/Glyph/IconGlyph";
+import { IconGlyph } from "../assets/Glyph";
 import CashflowCard from "../components/Card/CashflowCard";
-import NetWorthCard from "../components/Card/NetWorthCard";
+import RecommendationCard from "../components/Card/RecommendationCard";
+import WealthCard from "../components/Card/WealthCard";
 import { TopNav } from "../components/Navigation/TopNav";
+import { FetchUpdate } from "../libs/FetchUpdate";
+import { Asset } from "../models/Asset";
 import { Category } from "../models/Category";
+import { Currency } from "../models/Currency";
 import { Transaction } from "../models/Transaction";
-import { formatCurrency, getCurrentMonth } from "../utils/Misc";
+import { mainCurrency } from "../utils/Config";
+import { getCurrentMonth } from "../utils/Misc";
 import { SafeAreaInsetsView } from "../utils/SafeArea";
+import { ThemeColor } from "../utils/Theme";
+import { createRecommendations } from "../utils/recommenderLogic";
+
+const fetchRecommendations = async () => {
+  try {
+    return await createRecommendations();
+  } catch (error) {
+    console.error("Error fetching recommendations:", error);
+    return [];
+  }
+};
 
 export const Home = () => {
   const navigation = useNavigation<NavigationProp<any>>();
+  const [netWorth, setNetWorth] = React.useState(0);
+  const allTransactions = useQuery(Transaction);
   const categories = useQuery(Category, (collection) => {
     return collection.filtered("title != $0", "Uncategorized");
   });
-  const expenseCategories: Results<Category> = categories.filtered(
+  const assets = useQuery(Asset);
+  const expenseCategories: Realm.Results<Category> = categories.filtered(
     "isExpense == $0",
     true,
   );
-  const incomeCategories: Results<Category> = categories.filtered(
+  const incomeCategories: Realm.Results<Category> = categories.filtered(
     "isExpense == $0",
     false,
   );
-  const budgetedCategories: Results<Category> = expenseCategories.filtered(
-    "hasBudget == $0",
-    true,
-  );
+  const budgetedCategories: Realm.Results<Category> =
+    expenseCategories.filtered("hasBudget == $0", true);
   const colorScheme = useColorScheme();
+  const [recommendations, setRecommendations] = React.useState([]);
 
   const amountByExpenseCategory: number[] = new Array(
     expenseCategories.length,
   ).fill(0);
+
   for (let i = 0; i < expenseCategories.length; i++) {
-    expenseCategories[i]
-      .linkingObjects<Transaction>("Transaction", "category")
-      .forEach((trans) => {
-        amountByExpenseCategory[i] += trans.amount;
-      });
+    amountByExpenseCategory[i] = expenseCategories[i].calculateTotals();
   }
   const expenseSum = amountByExpenseCategory.reduce(
     (accumulator, currentValue) => {
@@ -74,11 +93,7 @@ export const Home = () => {
     incomeCategories.length,
   ).fill(0);
   for (let i = 0; i < incomeCategories.length; i++) {
-    incomeCategories[i]
-      .linkingObjects<Transaction>("Transaction", "category")
-      .forEach((trans) => {
-        amountByIncomeCategory[i] += trans.amount;
-      });
+    amountByIncomeCategory[i] = incomeCategories[i].calculateTotals();
   }
   const incomeSum = amountByIncomeCategory.reduce(
     (accumulator, currentValue) => {
@@ -87,11 +102,49 @@ export const Home = () => {
     0,
   );
 
+  React.useEffect(() => {
+    let totalAmount = allTransactions.reduce((acc, trans) => {
+      return (
+        acc +
+        trans.currency.getAmount(trans.amountInBaseCurrency) *
+          (trans.isExpense ? -1 : 1)
+      );
+    }, 0);
+    assets.forEach((asset) => {
+      totalAmount += asset.curPrice.quote * asset.unitsOwned;
+    });
+    setNetWorth(totalAmount);
+  }, [assets]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const getRecommendations = async () => {
+        const result = await fetchRecommendations();
+        setRecommendations(result);
+        console.log(recommendations);
+      };
+      getRecommendations();
+    }, []),
+  );
+
   let gradientColor = ["rgb(255, 246, 229)", "rgb(248, 237, 216)"];
 
   if (colorScheme === "dark") {
     gradientColor = ["rgb(0, 11, 21)", "rgb(0, 0, 0)"];
   }
+
+  const [loading, setLoading] = React.useState(false);
+  const baseCurrency = useObject(Currency, mainCurrency);
+
+  const handleFetchData = async () => {
+    setLoading(true);
+    try {
+      await FetchUpdate();
+    } catch (error) {
+      console.log("Error fetching data:", error);
+    }
+    setLoading(false);
+  };
 
   return (
     <View
@@ -108,13 +161,16 @@ export const Home = () => {
       />
       <SafeAreaInsetsView className="absolute w-full h-full">
         <TopNav
-          title="Home"
+          title={loading ? "Fetching Updates" : "Home"}
           left={
-            <TouchableOpacity
-              onPress={() => console.log("clicked")}
-              className="pl-5"
-            >
-              <IconGlyph glyph="Success" dim={32} fill="green" />
+            <TouchableOpacity onPress={handleFetchData} className="pl-5">
+              <IconGlyph
+                glyph={loading ? "Globe" : "Success"}
+                dim={32}
+                fill={
+                  loading ? ThemeColor.s_blue["100"] : ThemeColor.s_green["100"]
+                }
+              />
             </TouchableOpacity>
           }
           right={
@@ -122,7 +178,11 @@ export const Home = () => {
               onPress={() => navigation.navigate("settings")}
               className="pr-5"
             >
-              <IconGlyph glyph="Settings" dim={32} fill="black" />
+              <IconGlyph
+                glyph="Settings"
+                dim={32}
+                fill={colorScheme === "dark" ? "#FFFFFF" : "#000000"}
+              />
             </TouchableOpacity>
           }
           titleColor={colorScheme === "dark" ? "#FFFFFF" : "#000000"}
@@ -137,15 +197,18 @@ export const Home = () => {
             <Text className="relative text-xl text-s_light-20 text-center pt-4">
               Left to spend in {getCurrentMonth()}
             </Text>
-            <Text className="text-s_green-100 relative text-6xl font-semibold text-center pt-4">
-              {formatCurrency((totalBudget - budgetedSpend) / 100)}
+            <Text
+              className={`${totalBudget - budgetedSpend >= 0 ? "text-s_green-100" : "text-s_red-100"} relative text-6xl font-semibold text-center pt-4`}
+            >
+              {baseCurrency.symbol}
+              {baseCurrency.getAmountString(totalBudget - budgetedSpend)}
             </Text>
           </>
         )}
         <ScrollView style={{ flex: 1 }}>
           <CashflowCard
-            spendingNumber={expenseSum / 100}
-            incomeNumber={incomeSum / 100}
+            expenseTotal={expenseSum / 100}
+            incomeTotal={incomeSum / 100}
             expenseAmount={amountByExpenseCategory}
             expenseColor={expenseCategories.map((i) => i.color)}
             expenseTitle={expenseCategories.map((i) => i.title)}
@@ -153,7 +216,25 @@ export const Home = () => {
             incomeColor={incomeCategories.map((i) => i.color)}
             incomeTitle={incomeCategories.map((i) => i.title)}
           />
-          <NetWorthCard netWorth={100000} />
+          <WealthCard
+            netWorth={netWorth}
+            onClick={() => navigation.navigate("net wealth stack")}
+          />
+          {recommendations.length > 0 && (
+            <View className="mx-5 items-center mt-4">
+              <Text className="font-medium text-4xl text-s_dark-100 dark:text-s_light-100 mb-4">
+                Insights
+              </Text>
+            </View>
+          )}
+          {recommendations.map((rec, index) => (
+            <RecommendationCard
+              key={index}
+              title={rec.title}
+              description={rec.description}
+            />
+          ))}
+          <View className="h-28" />
         </ScrollView>
       </SafeAreaInsetsView>
     </View>

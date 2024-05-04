@@ -1,6 +1,7 @@
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import "react-native-get-random-values";
 import { useQuery } from "@realm/react";
+import { BlurView } from "expo-blur";
 import * as React from "react";
 import { useState } from "react";
 import {
@@ -14,7 +15,7 @@ import {
 } from "react-native";
 import { Results } from "realm";
 
-import { IconGlyph } from "../assets/Glyph/IconGlyph";
+import { IconGlyph } from "../assets/Glyph";
 import { MyButton } from "../components/Button/Button";
 import { PillButtonInteractive } from "../components/Button/PillButtonInteractive";
 import TransactionCard from "../components/Card/TransactionCard";
@@ -27,8 +28,8 @@ import { SafeAreaInsetsView } from "../utils/SafeArea";
 const SORT_OPTIONS = {
   NEWEST: { field: "datetime", direction: true },
   OLDEST: { field: "datetime", direction: false },
-  HIGHEST: { field: "amount", direction: true },
-  LOWEST: { field: "amount", direction: false },
+  HIGHEST: { field: "amountInBaseCurrency", direction: true },
+  LOWEST: { field: "amountInBaseCurrency", direction: false },
   AtoZ: { field: "title", direction: false },
   ZtoA: { field: "title", direction: true },
 };
@@ -87,12 +88,12 @@ export const TransactionScreen = () => {
   const transactions = useQuery(
     Transaction,
     (collection) => {
-      let query = collection;
+      let query = collection.filtered("isIncludeInCashFlow == $0", true);
 
       if (selectedMonth) {
         const year = new Date().getFullYear();
-        const startDateTime = new Date(year, selectedMonth - 1, 1).getTime();
-        const endDateTime = new Date(year, selectedMonth, 0).getTime();
+        const startDateTime = new Date(year, selectedMonth - 1, 1);
+        const endDateTime = new Date(year, selectedMonth, 0);
         query = query.filtered(
           "datetime >= $0 AND datetime <= $1",
           startDateTime,
@@ -129,10 +130,7 @@ export const TransactionScreen = () => {
     );
 
     // Today
-    const todayList = transactions.filtered(
-      "datetime >= $0",
-      todayStart.getTime(),
-    );
+    const todayList = transactions.filtered("datetime >= $0", todayStart);
     if (todayList.length !== 0) {
       segmentList.push({
         segmentTitle: "Today",
@@ -143,8 +141,8 @@ export const TransactionScreen = () => {
     // Yesterday
     const yesterdayList = transactions.filtered(
       "datetime >= $0 AND datetime <= $1",
-      yesterdayStart.getTime(),
-      yesterdayEnd.getTime(),
+      yesterdayStart,
+      yesterdayEnd,
     );
     if (yesterdayList.length !== 0) {
       segmentList.push({
@@ -156,8 +154,8 @@ export const TransactionScreen = () => {
     // Last 7 Days
     const Last7DaysList = transactions.filtered(
       "datetime >= $0 AND datetime <= $1",
-      last7DaysStart.getTime(),
-      last7DaysEnd.getTime(),
+      last7DaysStart,
+      last7DaysEnd,
     );
     if (Last7DaysList.length !== 0) {
       segmentList.push({
@@ -166,10 +164,7 @@ export const TransactionScreen = () => {
       });
     }
 
-    const restList = transactions.filtered(
-      "datetime < $0",
-      last7DaysStart.getTime(),
-    );
+    const restList = transactions.filtered("datetime < $0", last7DaysStart);
     if (restList.length !== 0) {
       segmentList.push({
         segmentTitle: "Earlier",
@@ -207,7 +202,7 @@ export const TransactionScreen = () => {
         <TopNav
           title="Transactions"
           titleColor={colorScheme === "dark" ? "#FFFFFF" : "#000000"}
-          onLeftPress={() => console.log("clicked")}
+          left={<View className="w-14" />}
           right={
             <TouchableOpacity
               onPress={() => setIsBottomSheetVisible(true)}
@@ -248,19 +243,25 @@ export const TransactionScreen = () => {
       </SafeAreaInsetsView>
 
       <Modal visible={isBottomSheetVisible} transparent animationType="slide">
-        <View className="absolute h-full w-full bg-s_dark-100op" />
+        <BlurView
+          className="absolute h-full w-full"
+          tint="dark"
+          intensity={50}
+        />
         <TouchableWithoutFeedback
           onPress={() => setIsBottomSheetVisible(false)}
         >
           <View className="flex-1" />
         </TouchableWithoutFeedback>
-        <View className="bg-s_light-100 rounded-t-3xl justify-end">
+        <View className="bg-s_light-100 dark:bg-s_dark-100 rounded-t-3xl justify-end">
           <View className="items-center py-2.5 pt-4 bg-transparent">
             <View className="w-16 h-1.5 bg-s_light-20 rounded-3xl mt-1" />
           </View>
           <View className="flex-col min-h-fit">
-            <View className="flex-row px-6 pb-4 items-center justify-between">
-              <Text className="text-2xl font-medium">Filter Transaction</Text>
+            <View className="flex-row px-6 pb-6 items-center justify-between">
+              <Text className="text-3xl font-medium dark:text-s_light-80">
+                Filter Transactions
+              </Text>
               <PillButtonInteractive
                 onPress={handleReset}
                 isPressed={false}
@@ -270,7 +271,9 @@ export const TransactionScreen = () => {
                 textSize="xl"
               />
             </View>
-            <Text className="text-2xl font-medium pb-4 px-6">Filter By</Text>
+            <Text className="text-2xl font-medium pb-4 px-6 dark:text-s_light-80">
+              Type
+            </Text>
             <View className="flex-row px-6 justify-between">
               <PillButtonInteractive
                 onPress={handleIncome}
@@ -289,7 +292,9 @@ export const TransactionScreen = () => {
                 textSize="xl"
               />
             </View>
-            <Text className="text-2xl font-medium pb-4 px-6 pt-4">Sort By</Text>
+            <Text className="text-2xl font-medium pb-4 px-6 pt-4 dark:text-s_light-80">
+              Sort By
+            </Text>
             <View className="flex-row px-6 justify-between">
               <View className="flex-col justify-between">
                 <PillButtonInteractive
@@ -347,14 +352,12 @@ export const TransactionScreen = () => {
                 />
               </View>
             </View>
-            <Text className="text-2xl font-medium pb-4 px-6 pt-4">
-              Category
-            </Text>
-            <View className="mx-2">
+            <View className="mx-2 mt-6">
               <DropdownMenuField
                 options={categories.map((i) => i.title)}
-                placeholder="Category"
+                placeHolder="Category"
                 onValueChange={() => console.log("dummy")}
+                currentSelection="Null"
               />
             </View>
             <View className="mb-8 mt-2 h-20">

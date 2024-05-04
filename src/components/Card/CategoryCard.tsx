@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-import { IconGlyph } from "../../assets/Glyph/IconGlyph";
+import { IconGlyph } from "../../assets/Glyph";
 import { Category } from "../../models/Category";
 import { addAlpha } from "../../utils/Misc";
 

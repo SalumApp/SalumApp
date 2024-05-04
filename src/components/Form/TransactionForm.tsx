@@ -12,35 +12,48 @@ import {
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Realm from "realm";
 
-import { IconGlyph } from "../../assets/Glyph/IconGlyph";
+import { IconGlyph } from "../../assets/Glyph";
 import { Account } from "../../models/Account";
 import { Category } from "../../models/Category";
+import { Friend } from "../../models/Friend";
 import { ThemeColor } from "../../utils/Theme";
 import { MyButton } from "../Button/Button";
 import { Toggle } from "../ControlElements/Toggle";
 import AttachFileField from "../InputElements/AttachFileField";
 import DropdownMenuField from "../InputElements/DropdownMenuField";
 import PlainTextField from "../InputElements/PlainTextField";
+import BottomSheet from "../Sheet/BottomSheet";
 
 interface TransactionFormProps {
   onConfirmation: () => void;
+  currentCategorySelection: string;
   onCategoryChange: (categoryObj: Category) => void;
+  currentAccountSelection: string;
   onAccountChange: (accountObj: Account) => void;
-  onDateChange: (value: number) => void;
+  onDateChange: (date: Date) => void;
   onDescriptionChange: (value: string) => void;
   onTitleChange: (value: string) => void;
   onAttachChange: (data: string) => void;
   categories: Realm.Results<Category>;
   accounts: Realm.Results<Account>;
+  friends: Realm.Results<Friend>;
   isRecurring: boolean;
   toggleRecurring: () => void;
+  isSplit: boolean;
+  toggleSplit: () => void;
+  curFriends: Friend[];
+  onFriendChange: (friendObjs: Friend[]) => void;
+  currentFrequencySelection: string;
   onFrequencyChange: (value: string) => void;
-  onEndDateChange: (value: number) => void;
+  onEndDateChange: (date: Date) => void;
+  transactionType: string;
 }
 
-const TransactionForm: React.FC<TransactionFormProps> = ({
+export const TransactionForm: React.FC<TransactionFormProps> = ({
   onConfirmation,
+  currentCategorySelection,
   onCategoryChange,
+  currentAccountSelection,
   onAccountChange,
   onDateChange,
   onDescriptionChange,
@@ -48,37 +61,44 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   onAttachChange,
   categories,
   accounts,
+  friends,
   isRecurring,
   toggleRecurring,
+  isSplit,
+  toggleSplit,
+  curFriends,
+  onFriendChange,
+  currentFrequencySelection,
   onFrequencyChange,
   onEndDateChange,
+  transactionType,
 }) => {
   const accountOptions = accounts.map((i) => i.title);
   const categoryOptions = categories.map((i) => i.title);
+  const friendsOptions = friends.map((i) => i.name);
+
   const [transactionDate, setTransactionDate] = useState(new Date());
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isDateTimePickerVisible, setDateTimePickerVisibility] =
     useState(false);
-  const [selectedFreq, setSelectedFreq] = useState("Frequency");
   const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const colorScheme = useColorScheme();
 
-  const handleFrequencyChange = (value: string) => {
-    setSelectedFreq(value);
-    onFrequencyChange(value);
-  };
+  const [selectedFriends, setSelectedFriends] = useState([]);
+  const [isFriendListVisible, setIsFriendListVisible] = useState(false);
+
   const handleEndDateChange = (event: any, date?: Date | undefined) => {
     setShowDatePicker(false);
     if (date) {
       setSelectedEndDate(new Date(date.getTime()));
-      onEndDateChange(date.getTime());
+      onEndDateChange(new Date(date.getTime()));
     }
   };
 
   const handleDateTimeConfirm = (date: Date) => {
     setTransactionDate(new Date(date.getTime()));
-    onDateChange(date.getTime());
+    onDateChange(new Date(date.getTime()));
     setDateTimePickerVisibility(false);
   };
 
@@ -87,32 +107,35 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
     onConfirmation();
   };
 
+  const handleAddFriend = () => {
+    setIsFriendListVisible(true);
+  };
+
   return (
     <>
       <ScrollView
-        className="mt-4 mb-20 w-full bg-white rounded-t-3xl dark:bg-s_dark-100"
+        className="mt-4 mb-20 w-full bg-s_light-100 rounded-t-3xl dark:bg-s_dark-100"
         automaticallyAdjustKeyboardInsets
       >
-        <View className="ml-2 mr-2 mt-6">
-          <PlainTextField
-            customPlaceholder="Title"
-            onTextChange={onTitleChange}
-          />
+        <View className="mx-6 h-20 mt-6 mb-4">
+          <PlainTextField placeholder="Title" onChangeText={onTitleChange} />
         </View>
         <View className="ml-2 mr-2 pt-2">
           <DropdownMenuField
             options={categoryOptions}
-            placeholder="Category"
+            placeHolder="Category"
             onValueChange={(value: string) =>
               onCategoryChange(categories[categoryOptions.indexOf(value)])
             }
+            currentSelection={currentCategorySelection}
           />
         </View>
         <View className="ml-2 mr-2 mt-6">
           <TouchableOpacity
-            className="justify-center items-center mx-4 h-20 bg-s_light-100 dark:bg-s_dark-75 border border-gray-300 rounded-3xl px-4"
+            className="flex-row justify-between items-center mx-4 h-20 bg-s_light-100 dark:bg-s_dark-75 border border-gray-300 rounded-3xl px-4"
             onPress={() => setDateTimePickerVisibility(true)}
           >
+            <Text className="text-2xl dark:text-s_light-80">Time</Text>
             <Text className="text-2xl dark:text-s_light-80">
               {transactionDate.toLocaleString()}
             </Text>
@@ -125,20 +148,20 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
             onCancel={() => setDateTimePickerVisibility(false)}
           />
         </View>
-
-        <View className="ml-2 mr-2 mt-2">
+        <View className="mx-6 h-20 mt-6 mb-4">
           <PlainTextField
-            customPlaceholder="Description"
-            onTextChange={onDescriptionChange}
+            placeholder="Description"
+            onChangeText={onDescriptionChange}
           />
         </View>
         <View className="ml-2 mr-2 mt-2">
           <DropdownMenuField
             options={accountOptions}
-            placeholder="Account"
+            placeHolder="Account"
             onValueChange={(value: string) =>
               onAccountChange(accounts[accountOptions.indexOf(value)])
             }
+            currentSelection={currentAccountSelection}
           />
         </View>
         <View className="mt-2">
@@ -169,11 +192,11 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
             <View className="mb-2">
               <DropdownMenuField
                 options={["Yearly", "Monthly", "Weekly", "Daily"]}
-                placeholder={selectedFreq}
-                onValueChange={handleFrequencyChange}
+                placeHolder={currentFrequencySelection ?? "Frequency"}
+                onValueChange={onFrequencyChange}
+                currentSelection={currentFrequencySelection}
               />
             </View>
-
             <View className="mb-2">
               <TouchableOpacity
                 onPress={() => setShowDatePicker(!showDatePicker)}
@@ -201,9 +224,72 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
             </View>
           </View>
         )}
-        <View className="mb-8 flex-auto pb-8">
-          <MyButton onPress={() => setShowConfirmation(true)} text="Continue" />
-        </View>
+        {transactionType === "expense" && (
+          <>
+            <View className="flex-row justify-between ml-2 mr-2 mt-8">
+              <Text
+                className="ml-5 text-2xl mb-2"
+                style={{
+                  color: isSplit
+                    ? colorScheme === "dark"
+                      ? ThemeColor.s_light["80"]
+                      : ThemeColor.s_dark["100"]
+                    : "#9CA3AF",
+                }}
+              >
+                Split
+              </Text>
+              <View className="mr-5">
+                <Toggle onToggle={toggleSplit} isEnabled={isSplit} />
+              </View>
+            </View>
+            {isSplit && (
+              <View className="ml-2 mr-2 mt-4">
+                {selectedFriends.map((friend) => (
+                  <View
+                    key={friend}
+                    className="flex-row items-center mb-4 mx-4"
+                  >
+                    <Text
+                      className="ml-2 text-2xl text-s_dark-100 dark:text-s_light-100 flex-1"
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                    >
+                      {friend}
+                    </Text>
+                    <View className="flex-row items-center ml-auto">
+                      <TouchableOpacity
+                        onPress={() => {
+                          setSelectedFriends(
+                            selectedFriends.filter((item) => item !== friend),
+                          );
+                          onFriendChange(
+                            curFriends.filter((item) => item.name !== friend),
+                          );
+                        }}
+                      >
+                        <IconGlyph glyph="Trash" dim={35} fill="#FF0000" />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                ))}
+                <TouchableOpacity
+                  onPress={handleAddFriend}
+                  className="flex-row items-center mt-4 mx-4 my-4"
+                >
+                  <View className="w-16 h-16 bg-s_blue-100 rounded-3xl items-center justify-center">
+                    <IconGlyph glyph="Plus" dim={32} fill="#FFFFFF" />
+                  </View>
+                  <Text className="ml-2 text-3xl text-s_dark-100 dark:text-s_light-100">
+                    Add Friend
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </>
+        )}
+        <MyButton onPress={() => setShowConfirmation(true)} text="Continue" />
+        <View className="h-24" />
       </ScrollView>
       {showConfirmation && (
         <Modal visible={showConfirmation} transparent animationType="fade">
@@ -219,8 +305,21 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
           </TouchableWithoutFeedback>
         </Modal>
       )}
+      <BottomSheet
+        visible={isFriendListVisible}
+        onClose={() => setIsFriendListVisible(false)}
+        options={friendsOptions}
+        onOptionSelect={(friendName) => {
+          if (!selectedFriends.includes(friendName)) {
+            setSelectedFriends([...selectedFriends, friendName]);
+            onFriendChange([
+              ...curFriends,
+              friends[friendsOptions.indexOf(friendName)],
+            ]);
+          }
+          setIsFriendListVisible(false);
+        }}
+      />
     </>
   );
 };
-
-export default TransactionForm;

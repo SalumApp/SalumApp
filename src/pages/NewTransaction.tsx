@@ -1,20 +1,41 @@
 import "react-native-get-random-values";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { useQuery, useRealm } from "@realm/react";
-import React, { useState } from "react";
+import { useObject, useQuery, useRealm } from "@realm/react";
+import React from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { formatCurrency } from "react-native-format-currency";
 import Realm from "realm";
 
-import TransactionForm from "../components/Form/TransactionForm";
+import { TransactionForm } from "../components/Form/TransactionForm";
 import { ExpenseNav } from "../components/Navigation/ExpenseNav";
 import BottomSheet from "../components/Sheet/BottomSheet";
 import { Account } from "../models/Account";
 import { Category } from "../models/Category";
+import { Currency } from "../models/Currency";
+import { Friend } from "../models/Friend";
+import { SplitTransaction } from "../models/SplitTransaction";
 import { Transaction } from "../models/Transaction";
-import { currencies } from "../utils/Config";
-import { formatCentsToDollars } from "../utils/Misc";
+import { mainCurrency } from "../utils/Config";
 import { SafeAreaInsetsView } from "../utils/SafeArea";
+
+interface TransacInterface {
+  _id: Realm.BSON.UUID;
+  title: string;
+  category: Category;
+  datetime: Date;
+  isIncludeInCashFlow: boolean;
+  isExpense: boolean;
+  amount: number;
+  amountInBaseCurrency: number;
+  currency: Currency;
+  account: Account;
+  isRecurring: boolean;
+  frequency?: string;
+  endDate?: Date;
+  isSplit: boolean;
+  description?: string;
+  attachments?: string;
+}
 
 interface NewTransactionProps {
   transactionType: string;
@@ -23,10 +44,10 @@ interface NewTransactionProps {
 export const NewTransaction = ({ transactionType }: NewTransactionProps) => {
   const navigation = useNavigation<NavigationProp<any>>();
   const realm = useRealm();
-
   const [key, setKey] = React.useState(0);
 
   const accounts = useQuery(Account);
+  const friends = useQuery(Friend);
   // TODO: alert to add one account before adding transaction if the length of accounts is zero
   // if (accounts.length === 0) {
 
@@ -42,53 +63,33 @@ export const NewTransaction = ({ transactionType }: NewTransactionProps) => {
     });
   }
   /* eslint-enable react-hooks/rules-of-hooks */
+  const enabledCurrencies = useQuery(Currency, (collection) => {
+    return collection.filtered("enabled == $0", true);
+  });
+  const defaultCurrency = useObject(Currency, mainCurrency);
+  const currencyOptions = enabledCurrencies.map((currency) => currency.code);
 
   const [title, setTitle] = React.useState("");
-  const [epochTime, setEpochTime] = React.useState(new Date().getTime());
+  const [epochTime, setEpochTime] = React.useState(new Date());
   const [selectedAccount, setSelectedAccount] = React.useState(accounts[0]);
   const [selectedCategory, setSelectedCategory] = React.useState(categories[0]);
-  const [selectedCurrency, setSelectedCurrency] = React.useState("USD");
+  const [selectedCurrency, setSelectedCurrency] =
+    React.useState(defaultCurrency);
   const [isBottomSheetVisible, setIsBottomSheetVisible] = React.useState(false);
-  const [amountInCents, setAmountInCents] = React.useState(0);
+  const [amountInBaseUnits, setAmountInBaseUnits] = React.useState(0);
   const [description, setDescription] = React.useState(null);
   const [attachment, setAttachment] = React.useState(null);
   const [isRecurring, setIsRecurring] = React.useState(false);
-  const [selectedFreq, setSelectedFreq] = useState("Frequency");
-  const [selectedEndDate, setSelectedEndDate] = useState<number | null>(null);
-
-  // const handleAddTask = useCallback(
-  //     (category: string, etime: number, cur_amount: string, cur_currency: string, cur_account: string, desp: string): void => {
-  //       if (!category || !etime || !cur_amount || !cur_account || !cur_currency) {
-  //         console.log("failed")
-  //         console.log(category)
-  //         console.log(etime)
-  //         console.log(cur_amount)
-  //         console.log(cur_account)
-  //         return;
-  //       }
-  //
-  //       // Everything in the function passed to "realm.write" is a transaction and will
-  //       // hence succeed or fail together. A transcation is the smallest unit of transfer
-  //       // in Realm, so we want to be mindful of how much we put into one single transaction
-  //       // and split them up if appropriate (more commonly seen server side). Since clients
-  //       // may occasionally be online during short time spans we want to increase the probability
-  //       // of sync participants to successfully sync everything in the transaction, otherwise
-  //       // no changes propagate and the transaction needs to start over when connectivity allows.
-  //       realm.write(() => {
-  //         return realm.create(Transaction, {
-  //           datetime: etime,
-  //           amount: cur_amount,
-  //           currency: cur_currency,
-  //           accountId: cur_account,
-  //           description: desp,
-  //         });
-  //       });
-  //     },
-  //     [realm],
-  // );
+  const [selectedFreq, setSelectedFreq] = React.useState("Frequency");
+  const [selectedEndDate, setSelectedEndDate] = React.useState<Date | null>(
+    null,
+  );
+  const [isSplit, setIsSplit] = React.useState(false);
+  const [splitList, setSplitList] = React.useState<Friend[]>([]);
+  const baseCurrency = useObject(Currency, mainCurrency);
 
   const handleCurrencySelect = (currency: string) => {
-    setSelectedCurrency(currency);
+    setSelectedCurrency(enabledCurrencies[currencyOptions.indexOf(currency)]);
     setIsBottomSheetVisible(false);
   };
 
@@ -98,38 +99,33 @@ export const NewTransaction = ({ transactionType }: NewTransactionProps) => {
   };
 
   const handleAmountChange = (value: string) => {
-    setAmountInCents(parseInt(value, 10));
+    if (value === "") {
+      value = "0";
+    }
+    setAmountInBaseUnits(parseInt(value, 10));
   };
 
   const handleConfirmation = () => {
-    interface ITransaction {
-      _id: Realm.BSON.UUID;
-      title: string;
-      category: Category;
-      datetime: number;
-      isExpense: boolean;
-      amount: number;
-      amountInUSD: number;
-      currency: string;
-      account: Account;
-      isRecurring: boolean;
-      frequency?: string;
-      endDate?: number;
-      description?: string;
-      attachments?: string;
-    }
-
-    const transactionToInsert: ITransaction = {
+    const transactionToInsert: TransacInterface = {
       _id: new Realm.BSON.UUID(),
       title,
       category: selectedCategory,
       datetime: epochTime,
+      isIncludeInCashFlow: true,
       isExpense: transactionType === "expense",
-      amount: amountInCents,
-      amountInUSD: amountInCents,
+      amount: amountInBaseUnits,
+      amountInBaseCurrency: Math.round(
+        baseCurrency.getAmountInBaseUnits(
+          selectedCurrency.convertToFcy(
+            baseCurrency,
+            selectedCurrency.getAmount(amountInBaseUnits),
+          ),
+        ),
+      ),
       currency: selectedCurrency,
       account: selectedAccount,
       isRecurring,
+      isSplit,
     };
     if (isRecurring) {
       transactionToInsert.frequency = selectedFreq;
@@ -144,13 +140,29 @@ export const NewTransaction = ({ transactionType }: NewTransactionProps) => {
       transactionToInsert.attachments = attachment;
     }
     realm.write(() => {
-      realm.create(Transaction, transactionToInsert);
-      selectedAccount.balance +=
-        amountInCents * (transactionType === "income" ? 1 : -1);
+      const transac = realm.create(Transaction, transactionToInsert);
+      if (splitList.length !== 0) {
+        splitList.forEach((friend) => {
+          realm.create(SplitTransaction, {
+            _id: new Realm.BSON.UUID(),
+            friend,
+            transaction: transac,
+            amount: Math.round(
+              transactionToInsert.amountInBaseCurrency / (splitList.length + 1),
+            ),
+          });
+        });
+      }
     });
     setKey((prevKey) => prevKey + 1);
-    setAmountInCents(0);
+    setAmountInBaseUnits(0);
+    setSelectedCategory(categories[0]);
     setIsRecurring(false);
+    setEpochTime(new Date());
+    setAttachment(null);
+    setSplitList([]);
+    setSelectedAccount(accounts[0]);
+    setSelectedCategory(categories[0]);
     navigation.navigate("transaction");
   };
 
@@ -183,19 +195,19 @@ export const NewTransaction = ({ transactionType }: NewTransactionProps) => {
             className="pl-4 mt-12"
           >
             <Text className="text-2xl rounded-lg w-20 pl-4 text-s_light-80 opacity-65">
-              {selectedCurrency}
+              {selectedCurrency.code}
             </Text>
           </TouchableOpacity>
         </View>
         <View className="mt-4 flex-row items-center w-full">
           <Text className="text-white text-3xl pl-8 mr-1">
-            {getCurrencySymbol(selectedCurrency)}
+            {getCurrencySymbol(selectedCurrency.code)}
           </Text>
           <TextInput
             className="text-s_light-100 text-6xl m-1 pr-5 pt-3 flex-1"
             keyboardType="number-pad"
             textAlign="left"
-            value={formatCentsToDollars(amountInCents)}
+            value={selectedCurrency.getInputAmountString(amountInBaseUnits)}
             onChangeText={(text) =>
               handleAmountChange(text.replace(/[^0-9]/g, ""))
             }
@@ -206,23 +218,32 @@ export const NewTransaction = ({ transactionType }: NewTransactionProps) => {
         <TransactionForm
           onTitleChange={setTitle}
           onConfirmation={handleConfirmation}
+          currentAccountSelection={selectedAccount.title}
           onAccountChange={setSelectedAccount}
+          currentCategorySelection={selectedCategory.title}
           onCategoryChange={setSelectedCategory}
           onDateChange={setEpochTime}
           onDescriptionChange={setDescription}
           onAttachChange={setAttachment}
           categories={categories}
           accounts={accounts}
+          friends={friends}
           isRecurring={isRecurring}
           toggleRecurring={() => setIsRecurring(!isRecurring)}
+          isSplit={isSplit}
+          toggleSplit={() => setIsSplit(!isSplit)}
+          currentFrequencySelection={selectedFreq}
           onFrequencyChange={setSelectedFreq}
           onEndDateChange={setSelectedEndDate}
+          transactionType={transactionType}
+          curFriends={splitList}
+          onFriendChange={setSplitList}
         />
       </View>
       <BottomSheet
         visible={isBottomSheetVisible}
         onClose={() => setIsBottomSheetVisible(false)}
-        options={currencies}
+        options={currencyOptions}
         onOptionSelect={handleCurrencySelect}
       />
     </SafeAreaInsetsView>

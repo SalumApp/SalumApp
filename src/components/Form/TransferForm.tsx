@@ -2,21 +2,25 @@ import React, { useState } from "react";
 import { Modal, Text, TouchableWithoutFeedback, View } from "react-native";
 import Realm from "realm";
 
-import { IconGlyph } from "../../assets/Glyph/IconGlyph";
+import { IconGlyph } from "../../assets/Glyph";
 import { Account } from "../../models/Account";
 import { MyButton } from "../Button/Button";
 import DropdownMenuField from "../InputElements/DropdownMenuField";
 
 interface TransferFormProps {
   onConfirmation: () => void;
+  currentFromAccountSelection: string;
   onFromAccountChange: (accountObj: Account) => void;
+  currentToAccountSelection: string;
   onToAccountChange: (accountObj: Account) => void;
   accounts: Realm.Results<Account>;
 }
 
 const TransferForm: React.FC<TransferFormProps> = ({
   onConfirmation,
+  currentFromAccountSelection,
   onFromAccountChange,
+  currentToAccountSelection,
   onToAccountChange,
   accounts,
 }) => {
@@ -30,15 +34,16 @@ const TransferForm: React.FC<TransferFormProps> = ({
 
   return (
     <>
-      <View className="w-full bg-white dark:bg-s_dark-100 rounded-t-3xl">
+      <View className="w-full bg-s_light-100 dark:bg-s_dark-100 rounded-t-3xl">
         <View className="mx-2 mt-6 mb-4 pt-2 flex-row justify-between">
           <View className="w-48">
             <DropdownMenuField
               options={accountOptions}
-              placeholder="From"
+              placeHolder="From"
               onValueChange={(value: string) =>
                 onFromAccountChange(accounts[accountOptions.indexOf(value)])
               }
+              currentSelection={currentFromAccountSelection}
             />
           </View>
           <View className="items-center justify-center">
@@ -47,10 +52,11 @@ const TransferForm: React.FC<TransferFormProps> = ({
           <View className="w-48">
             <DropdownMenuField
               options={accountOptions}
-              placeholder="To"
+              placeHolder="To"
               onValueChange={(value: string) =>
                 onToAccountChange(accounts[accountOptions.indexOf(value)])
               }
+              currentSelection={currentToAccountSelection}
             />
           </View>
         </View>
